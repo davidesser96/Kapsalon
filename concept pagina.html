@@ -1,0 +1,989 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>itsyourbeauty by Shirley – prototype website</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#F7F3EE;--card:#FFFDFA;--sage:#7D8F7A;--sage-d:#5C6B59;--sage-l:#EEF2EC;--terra:#C0785A;--terra-d:#A65F3F;--ink:#3A2F2A;--muted:#6F625A;--sand:#E6DCCF;--sand-l:#EFE8DF;--r:14px;--shadow:0 1px 2px rgba(58,47,42,.05),0 8px 24px rgba(58,47,42,.06);--serif:'Cormorant Garamond',Georgia,serif;--sans:'DM Sans',system-ui,-apple-system,sans-serif}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 var(--sans);-webkit-font-smoothing:antialiased}
+h1,h2,h3{font-family:var(--serif);font-weight:600;line-height:1.12;margin:0 0 .45em;letter-spacing:-.01em}
+h1{font-size:clamp(2.3rem,5vw,3.4rem)}h2{font-size:clamp(1.8rem,3.6vw,2.4rem)}h3{font-size:1.4rem}
+p{margin:0 0 1em}
+a{color:var(--terra-d)}
+.wrap{max-width:1140px;margin:0 auto;padding:0 20px}
+.muted{color:var(--muted)}
+.small{font-size:.88rem}
+:focus-visible{outline:3px solid var(--sage);outline-offset:2px;border-radius:6px}
+.page[hidden]{display:none}
+svg.i{width:20px;height:20px;flex:none}
+
+/* top bar */
+.topbar{position:sticky;top:0;z-index:50;background:rgba(247,243,238,.93);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--sand)}
+.topbar .wrap{display:flex;align-items:center;justify-content:space-between;height:66px}
+.logo{display:flex;align-items:center;gap:10px;font-family:var(--serif);font-size:1.6rem;font-weight:700;color:var(--ink);text-decoration:none}
+.logo .mark{width:36px;height:36px;border-radius:50%;background:var(--sage-d);color:#fff;display:grid;place-items:center}
+.logo .mark svg{width:19px;height:19px}
+.logo .lt{display:flex;flex-direction:column;line-height:1}.logo .lt small{font-family:var(--sans);font-size:.72rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--terra-d);margin-top:3px}
+.hero .by{font-family:var(--serif);font-style:italic;font-size:clamp(1.4rem,3.5vw,2rem);margin:-.2em 0 .6em}
+.nav{display:flex;gap:2px;align-items:center}
+.nav a{color:var(--ink);text-decoration:none;padding:8px 12px;border-radius:999px;font-size:.95rem}
+.nav a:hover{background:var(--sand-l)}.nav a.active{background:var(--sand)}
+.nav a.cta{background:var(--terra-d);color:#fff;margin-left:8px;font-weight:500}.nav a.cta:hover{background:#8f5034}
+.menu-btn{display:none;background:none;border:1px solid var(--sand);border-radius:10px;padding:8px;cursor:pointer;color:var(--ink)}
+@media(max-width:920px){.menu-btn{display:inline-flex}.nav{position:absolute;top:66px;left:0;right:0;flex-direction:column;align-items:stretch;background:var(--bg);border-bottom:1px solid var(--sand);padding:8px 20px 18px;display:none;box-shadow:var(--shadow)}.nav.open{display:flex}.nav a{padding:12px}.nav a.cta{margin:8px 0 0;text-align:center}}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 22px;border-radius:999px;border:1.5px solid transparent;font:500 1rem var(--sans);cursor:pointer;text-decoration:none;transition:background .15s,border-color .15s,transform .15s;line-height:1.2}
+.btn.primary{background:var(--terra-d);color:#fff}.btn.primary:hover{background:#8f5034}
+.btn.sage{background:var(--sage-d);color:#fff}.btn.sage:hover{background:#4b5949}
+.btn.ghost{background:transparent;border-color:currentColor;color:var(--ink)}
+.btn.light{background:#fff;color:var(--ink);border-color:var(--sand)}.btn.light:hover{border-color:var(--sage)}
+.btn.danger{background:#fff;color:#9b3b2b;border-color:#e3c3bb}.btn.danger:hover{background:#fbefec}
+.btn.sm{padding:7px 14px;font-size:.9rem}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btns{display:flex;gap:10px;flex-wrap:wrap}
+
+/* hero */
+.hero{position:relative;min-height:calc(100vh - 66px);min-height:calc(100svh - 66px);display:grid;place-items:center;overflow:hidden;text-align:center;color:#fff}
+.hero-bg{position:absolute;inset:-60px;filter:blur(16px) saturate(1.05)}
+.hero-bg svg{width:100%;height:100%;display:block}
+.hero::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(58,47,42,.30),rgba(58,47,42,.58))}
+.hero-inner{position:relative;z-index:1;padding:48px 20px;max-width:760px}
+.hero h1{font-size:clamp(3.2rem,10vw,6rem);margin:.08em 0 .12em;color:#fff;font-weight:600}
+.eyebrow{letter-spacing:.2em;text-transform:uppercase;font-size:.78rem;font-weight:500;opacity:.92;margin:0}
+.hero .lead{font-size:clamp(1.05rem,2.4vw,1.3rem);opacity:.96;margin:0 auto 30px;max-width:520px}
+.hero .btns{justify-content:center}
+.hero .btn.ghost{color:#fff}
+.hero .btn.ghost:hover{background:rgba(255,255,255,.12)}
+.ph-note{position:absolute;right:12px;bottom:12px;z-index:2;font-size:.72rem;background:rgba(0,0,0,.35);padding:3px 9px;border-radius:6px;color:#fff}
+.scroll-hint{position:absolute;bottom:22px;left:50%;transform:translateX(-50%);z-index:2;color:#fff;opacity:.8}
+
+/* sections */
+.section{padding:72px 0}
+.section.alt{background:var(--sand-l)}
+.intro{display:grid;grid-template-columns:1.1fr 1fr;gap:48px;align-items:center}
+@media(max-width:820px){.intro{grid-template-columns:1fr;gap:24px}}
+.intro .facts{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fact{background:var(--card);border:1px solid var(--sand);border-radius:var(--r);padding:16px}
+.fact b{display:block;font-family:var(--serif);font-size:1.25rem}
+.fact span{color:var(--muted);font-size:.9rem}
+.tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px}
+.tile{background:var(--card);border:1px solid var(--sand);border-radius:var(--r);padding:22px;text-decoration:none;color:var(--ink);box-shadow:var(--shadow);transition:transform .15s,border-color .15s;display:flex;flex-direction:column;gap:4px}
+.tile:hover{transform:translateY(-3px);border-color:var(--sage)}
+.tile .ic{width:46px;height:46px;border-radius:12px;background:var(--sage-l);display:grid;place-items:center;color:var(--sage-d);margin-bottom:8px}
+.tile .ic svg{width:24px;height:24px}
+.tile h3{margin:0;font-size:1.35rem}.tile p{margin:0;color:var(--muted);font-size:.95rem}
+.tile .go{margin-top:10px;color:var(--terra-d);font-weight:500;font-size:.92rem}
+.sec-head{display:flex;justify-content:space-between;align-items:end;gap:16px;margin-bottom:24px;flex-wrap:wrap}
+.sec-head h2{margin:0}
+
+/* cards */
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:20px}
+.card{background:var(--card);border:1px solid var(--sand);border-radius:var(--r);overflow:hidden;box-shadow:var(--shadow);display:flex;flex-direction:column}
+.ph{position:relative;aspect-ratio:4/3;display:grid;place-items:center;color:rgba(255,255,255,.92);overflow:hidden}
+.ph::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 25% 30%,rgba(255,255,255,.35),transparent 45%),radial-gradient(circle at 80% 85%,rgba(58,47,42,.18),transparent 50%)}
+.ph svg{width:62px;height:62px;position:relative}
+.ph .tag{position:absolute;left:10px;bottom:10px;font-size:.7rem;background:rgba(58,47,42,.45);color:#fff;padding:2px 8px;border-radius:6px}
+.card .body{padding:18px 18px 20px;display:flex;flex-direction:column;gap:6px;flex:1}
+.card h3{margin:0;font-size:1.35rem}
+.card .desc{color:var(--muted);font-size:.93rem;margin:0}
+.card .meta{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:auto;padding-top:12px}
+.price{font-weight:700;font-size:1.15rem}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:3px 10px;border-radius:999px;background:var(--sand-l);font-size:.84rem;color:var(--muted);white-space:nowrap}
+.chip svg{width:14px;height:14px}
+.page-head{padding:52px 0 28px}
+.page-head p{color:var(--muted);max-width:660px;margin:0;font-size:1.05rem}
+.catnav{display:flex;gap:8px;flex-wrap:wrap;position:sticky;top:66px;background:var(--bg);padding:12px 0;z-index:5;margin-bottom:12px}
+.catnav a{padding:7px 15px;border-radius:999px;border:1px solid var(--sand);background:#fff;color:var(--ink);text-decoration:none;font-size:.93rem}
+.catnav a:hover{border-color:var(--sage)}
+.cat-block{padding:18px 0 34px;scroll-margin-top:130px}
+.cat-block h2{display:flex;align-items:center;gap:12px}
+.note{display:flex;gap:12px;align-items:flex-start;background:var(--sage-l);border:1px solid #d6dfd3;border-radius:12px;padding:14px 16px;font-size:.95rem}
+.note svg{color:var(--sage-d);margin-top:2px}
+.note.warn{background:#fbf1ea;border-color:#efd7c6}.note.warn svg{color:var(--terra-d)}
+
+/* booking */
+.booking{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:28px;align-items:start;padding-bottom:72px}
+@media(max-width:940px){.booking{grid-template-columns:1fr}}
+.stepper{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;list-style:none;padding:0;margin:0 0 18px}
+.stepper li{padding:10px 12px;border-radius:10px;background:var(--sand-l);color:var(--muted);font-size:.9rem;line-height:1.25}
+.stepper li b{display:block;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;font-weight:700}
+.stepper li.on{background:var(--sage-d);color:#fff}.stepper li.done{background:var(--sand);color:var(--ink)}
+@media(max-width:560px){.stepper li span{display:none}.stepper li{text-align:center}}
+.panel{background:var(--card);border:1px solid var(--sand);border-radius:var(--r);padding:24px;box-shadow:var(--shadow)}
+.panel h2{font-size:1.8rem}
+.panel-foot{display:flex;justify-content:space-between;gap:10px;margin-top:22px;padding-top:18px;border-top:1px solid var(--sand);flex-wrap:wrap}
+.grp-title{font-family:var(--serif);font-size:1.3rem;font-weight:600;margin:18px 0 8px}
+.grp-title:first-child{margin-top:0}
+.opt-list{display:grid;gap:8px}
+.opt{display:flex;align-items:center;gap:14px;width:100%;text-align:left;background:#fff;border:1.5px solid var(--sand);border-radius:12px;padding:12px 14px;cursor:pointer;font:inherit;color:inherit;transition:border-color .12s,background .12s}
+.opt:hover{border-color:var(--sage)}.opt.sel{border-color:var(--sage-d);background:var(--sage-l)}
+.opt .chk{width:22px;height:22px;border-radius:6px;border:1.5px solid #cfc3b4;display:grid;place-items:center;flex:none;color:transparent;background:#fff}
+.opt.radio .chk{border-radius:50%}
+.opt.sel .chk{background:var(--sage-d);border-color:var(--sage-d);color:#fff}
+.opt .chk svg{width:14px;height:14px}
+.opt .grow{flex:1;min-width:0}.opt small{color:var(--muted);display:block;font-size:.85rem}
+.opt .r{text-align:right;white-space:nowrap}
+.staff-opts{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media(max-width:640px){.staff-opts{grid-template-columns:1fr}}
+.staff-opt{flex-direction:column;text-align:center;padding:20px 14px;gap:8px}
+.avatar{width:64px;height:64px;border-radius:50%;display:grid;place-items:center;color:#fff;font-family:var(--serif);font-size:1.7rem;font-weight:700;flex:none}
+.avatar.sm{width:30px;height:30px;font-size:.95rem}
+.weeknav{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;gap:8px}
+.weeknav b{font-family:var(--serif);font-size:1.25rem;text-transform:capitalize}
+.iconbtn{width:40px;height:40px;border-radius:50%;border:1.5px solid var(--sand);background:#fff;display:grid;place-items:center;cursor:pointer;color:var(--ink)}
+.iconbtn:disabled{opacity:.35;cursor:not-allowed}
+.days{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+.day{border:1.5px solid var(--sand);background:#fff;border-radius:10px;padding:8px 2px;text-align:center;cursor:pointer;font:inherit;color:inherit;line-height:1.3}
+.day .dn{font-size:.72rem;text-transform:uppercase;color:var(--muted);letter-spacing:.05em}.day .dd{font-weight:700;font-size:1.2rem}.day .dc{font-size:.72rem;color:var(--sage-d);font-weight:500}
+.day:disabled{cursor:not-allowed;background:var(--sand-l);border-color:var(--sand-l)}.day:disabled .dd{color:#b3a79c}.day:disabled .dc{color:var(--muted)}
+.day.sel{border-color:var(--sage-d);background:var(--sage-d);color:#fff}.day.sel .dn,.day.sel .dc{color:#fff}
+@media(max-width:520px){.days{grid-template-columns:repeat(4,1fr)}}
+.times-wrap{margin-top:20px}
+.times{display:grid;grid-template-columns:repeat(auto-fill,minmax(76px,1fr));gap:6px;margin-bottom:12px}
+.time{padding:9px 0;border:1.5px solid var(--sand);border-radius:8px;background:#fff;cursor:pointer;font:500 .95rem var(--sans);color:var(--ink)}
+.time:hover{border-color:var(--sage)}.time.sel{background:var(--sage-d);color:#fff;border-color:var(--sage-d)}
+.tlabel{font-size:.8rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:6px 0}
+.field{display:flex;flex-direction:column;gap:5px;margin-bottom:14px}
+.field label{font-weight:500;font-size:.92rem}
+.field .err{color:#9b3b2b;font-size:.85rem;display:none}.field.bad .err{display:block}.field.bad input{border-color:#c98a7c}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:0 14px}
+@media(max-width:560px){.row2{grid-template-columns:1fr}}
+input,select,textarea{font:inherit;padding:10px 12px;border:1.5px solid var(--sand);border-radius:10px;background:#fff;color:var(--ink);width:100%}
+input:focus,select:focus,textarea:focus{border-color:var(--sage);outline:none;box-shadow:0 0 0 3px rgba(125,143,122,.2)}
+textarea{min-height:84px;resize:vertical}
+.check{display:flex;gap:10px;align-items:flex-start;font-size:.93rem}
+.check input{width:18px;height:18px;margin-top:3px;accent-color:var(--sage-d);flex:none}
+.side{display:grid;gap:18px;position:sticky;top:86px}
+@media(max-width:940px){.side{position:static}}
+.sum h3{margin-bottom:12px}
+.sum-line{display:flex;justify-content:space-between;gap:10px;padding:5px 0;font-size:.95rem}
+.sum-line span:first-child{color:var(--muted)}
+.sum-total{border-top:1px solid var(--sand);margin-top:8px;padding-top:10px;font-weight:700}
+.sum-empty{color:var(--muted);font-size:.93rem}
+.hours{width:100%;border-collapse:collapse;font-size:.95rem}
+.hours td{padding:6px 0;border-bottom:1px dashed var(--sand)}
+.hours td:last-child{text-align:right}
+.hours tr.today td{font-weight:700;color:var(--sage-d)}
+.hours tr:last-child td{border-bottom:none}
+.success{text-align:center;padding:12px 0}
+.success .big{width:72px;height:72px;border-radius:50%;background:var(--sage-l);color:var(--sage-d);display:grid;place-items:center;margin:0 auto 14px}
+.success .big svg{width:36px;height:36px}
+.success .btns{justify-content:center}
+.steps-next{text-align:left;background:var(--sand-l);border-radius:12px;padding:16px 20px;margin:20px 0}
+.steps-next ol{margin:0;padding-left:20px}
+
+/* about / contact */
+.team{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:22px}
+.person{display:flex;gap:18px;background:var(--card);border:1px solid var(--sand);border-radius:var(--r);padding:22px;box-shadow:var(--shadow)}
+.person .avatar{width:96px;height:96px;font-size:2.4rem}
+.person h3{margin:0}.person .role{color:var(--terra-d);font-weight:500;font-size:.92rem;margin-bottom:8px}
+.portfolio{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px}
+.portfolio .ph{border-radius:var(--r);aspect-ratio:1}
+.portfolio .ph .tag{font-size:.78rem}
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px;padding-bottom:72px}
+@media(max-width:820px){.contact-grid{grid-template-columns:1fr}}
+.clist{list-style:none;padding:0;margin:0;display:grid;gap:14px}
+.clist li{display:flex;gap:14px;align-items:flex-start}
+.clist .ic{width:40px;height:40px;border-radius:10px;background:var(--sage-l);color:var(--sage-d);display:grid;place-items:center;flex:none}
+.clist small{display:block;color:var(--muted)}
+.map{position:relative;border-radius:var(--r);overflow:hidden;aspect-ratio:16/10;border:1px solid var(--sand)}
+.map svg{width:100%;height:100%;display:block}
+.placeholder{background:#fff6d6;border-bottom:1px dashed #d9bf6a;padding:0 2px}
+.faq details{background:var(--card);border:1px solid var(--sand);border-radius:12px;padding:0 18px;margin-bottom:10px}
+.faq summary{cursor:pointer;padding:16px 0;font-weight:500;list-style:none;display:flex;justify-content:space-between;gap:12px}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:'+';font-size:1.4rem;line-height:1;color:var(--sage-d)}
+.faq details[open] summary::after{content:'–'}
+.faq details p{color:var(--muted);margin:0 0 16px}
+.prose{max-width:760px;padding-bottom:72px}
+.prose h2{font-size:1.6rem;margin-top:1.4em}
+
+/* footer */
+footer{background:var(--ink);color:#e9e1d7;padding:52px 0 26px;margin-top:0}
+footer a{color:#fff}
+.fgrid{display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:32px}
+@media(max-width:760px){.fgrid{grid-template-columns:1fr}}
+footer h4{font-family:var(--serif);font-size:1.3rem;margin:0 0 10px;color:#fff;font-weight:600}
+footer ul{list-style:none;padding:0;margin:0;display:grid;gap:6px}
+footer .hours td{border-color:#5a4d46}
+footer .hours tr.today td{color:#cfe0c9}
+.fbottom{border-top:1px solid #5a4d46;margin-top:34px;padding-top:18px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:.85rem;color:#bfb2a6}
+
+/* modal */
+.modal{position:fixed;inset:0;z-index:100;background:rgba(40,32,28,.5);display:grid;place-items:center;padding:16px}
+.modal[hidden]{display:none}
+.modal-card{background:var(--bg);border-radius:18px;max-width:560px;width:100%;max-height:92vh;overflow:auto;padding:26px;position:relative;box-shadow:0 20px 60px rgba(0,0,0,.25)}
+.modal-card.wide{max-width:760px}
+.modal-x{position:absolute;top:12px;right:12px}
+.modal-card h3{padding-right:40px}
+
+/* mail preview */
+.mail{background:#fff;border:1px solid var(--sand);border-radius:12px;overflow:hidden;font-size:.95rem}
+.mail-h{background:var(--sand-l);padding:12px 16px;display:grid;gap:3px;font-size:.88rem}
+.mail-h span.k{display:inline-block;width:82px;color:var(--muted)}
+.att{display:inline-flex;align-items:center;gap:6px;background:#fff;border:1px solid var(--sand);border-radius:6px;padding:1px 8px}
+.att svg{width:14px;height:14px}
+.mail-b{padding:22px 22px 18px}
+.mail-logo{display:flex;align-items:center;gap:8px;font-family:var(--serif);font-size:1.4rem;font-weight:700;color:var(--sage-d);border-bottom:2px solid var(--sand);padding-bottom:12px;margin-bottom:16px}
+.mail-logo svg{width:20px;height:20px}
+.mt{border-collapse:collapse;width:100%;margin:12px 0 16px;background:var(--bg);border-radius:8px}
+.mt td{padding:7px 12px;border-bottom:1px solid #fff}.mt td:first-child{color:var(--muted);width:40%}
+.mail-btn{display:inline-block;background:var(--terra-d);color:#fff;padding:9px 18px;border-radius:999px;text-decoration:none;font-weight:500;margin:4px 6px 8px 0}
+.mail-btn.alt{background:#fff;color:var(--ink);border:1px solid var(--sand)}
+.mail-foot{margin-top:18px;padding-top:14px;border-top:1px solid var(--sand);font-size:.85rem;color:var(--muted)}
+
+/* admin */
+.admin{padding-bottom:72px}
+.login{max-width:420px;margin:40px auto 80px}
+.demo-hint{background:var(--sand-l);border-radius:10px;padding:12px 14px;font-size:.9rem;margin-bottom:16px}
+.demo-hint code{background:#fff;padding:1px 6px;border-radius:4px}
+.admin-top{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;padding:32px 0 18px}
+.admin-top h1{font-size:2.2rem;margin:0}
+.who{display:flex;align-items:center;gap:10px}
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--sand);margin-bottom:24px;overflow-x:auto}
+.tabs button{background:none;border:none;padding:12px 16px;font:500 .97rem var(--sans);color:var(--muted);cursor:pointer;border-bottom:2.5px solid transparent;white-space:nowrap;display:flex;gap:8px;align-items:center}
+.tabs button.on{color:var(--ink);border-bottom-color:var(--terra-d)}
+.badge{background:var(--terra-d);color:#fff;border-radius:999px;font-size:.75rem;padding:1px 8px;font-weight:700}
+.badge.grey{background:var(--sand);color:var(--ink)}
+.filters{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px}
+.filters button{border:1.5px solid var(--sand);background:#fff;border-radius:999px;padding:6px 14px;font:inherit;font-size:.9rem;cursor:pointer;color:var(--ink)}
+.filters button.on{background:var(--ink);border-color:var(--ink);color:#fff}
+.req-list{display:grid;gap:12px}
+.req{background:var(--card);border:1px solid var(--sand);border-left:5px solid var(--sage);border-radius:12px;padding:16px 18px;display:grid;grid-template-columns:1fr auto;gap:12px 20px;align-items:center;box-shadow:var(--shadow)}
+@media(max-width:720px){.req{grid-template-columns:1fr}}
+.req h4{margin:0;font-size:1.1rem}
+.req .when{font-weight:500}
+.req .info{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:.9rem;color:var(--muted);margin-top:4px}
+.req .notep{font-size:.9rem;background:var(--sand-l);border-radius:8px;padding:6px 10px;margin-top:8px;font-style:italic}
+.req .acts{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.empty{text-align:center;padding:40px 20px;color:var(--muted);background:var(--card);border:1px dashed var(--sand);border-radius:12px}
+.status{display:inline-block;font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;padding:2px 8px;border-radius:6px}
+.st-aangevraagd{background:#fbefdf;color:#8a5a1c}.st-bevestigd{background:var(--sage-l);color:var(--sage-d)}.st-voorgesteld{background:#ece7f6;color:#5b4b86}.st-afgewezen,.st-geannuleerd{background:#f6e6e2;color:#9b3b2b}
+.ag-bar{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+.ag-bar .wk{display:flex;align-items:center;gap:8px}
+.ag-bar .wk b{font-family:var(--serif);font-size:1.3rem;min-width:200px;text-align:center}
+.ag-scroll{overflow-x:auto;border:1px solid var(--sand);border-radius:var(--r);background:#fff}
+.ag{min-width:780px}
+.ag-head,.ag-body{display:grid}
+.ag-head{border-bottom:1px solid var(--sand);position:sticky;top:0;background:#fff;z-index:2}
+.ag-head div{padding:10px 6px;text-align:center;font-size:.85rem;border-left:1px solid var(--sand)}
+.ag-head div:first-child{border-left:none}
+.ag-head div b{display:block;font-size:1.1rem;font-family:var(--serif)}
+.ag-head .today{background:var(--sage-l)}
+.ag-lanes{display:flex;font-size:.68rem;color:var(--muted);margin-top:2px}.ag-lanes span{flex:1}
+.ag-time{position:relative;font-size:.75rem;color:var(--muted)}
+.ag-time span{position:absolute;right:8px;transform:translateY(-50%)}
+.ag-col{position:relative;border-left:1px solid var(--sand)}
+.ag-off{position:absolute;background:repeating-linear-gradient(135deg,#f4efe8 0 6px,#efe8df 6px 12px)}
+.ag-blk{position:absolute;background:repeating-linear-gradient(135deg,#ece4da 0 6px,#e3d9cc 6px 12px);display:flex;align-items:flex-start;justify-content:center;padding-top:8px;font-size:.72rem;color:var(--muted);text-align:center}
+.ag-ev{position:absolute;border-radius:6px;padding:3px 6px;font:500 .74rem/1.25 var(--sans);overflow:hidden;cursor:pointer;color:#fff;border:none;text-align:left;box-shadow:0 1px 2px rgba(0,0,0,.12)}
+.ag-ev small{display:block;font-weight:400;opacity:.9}
+.ag-ev.p{background:#fff!important;border:1.5px dashed currentColor}
+.ag-ev.v{background-image:repeating-linear-gradient(135deg,rgba(255,255,255,.25) 0 5px,transparent 5px 10px)!important}
+.ag-now{position:absolute;left:0;right:0;border-top:2px solid var(--terra-d);z-index:1}
+.legend{display:flex;gap:16px;flex-wrap:wrap;font-size:.85rem;color:var(--muted);margin-top:12px}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend i{width:14px;height:14px;border-radius:4px;display:inline-block}
+.av-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:20px}
+.htable{width:100%;border-collapse:collapse;font-size:.93rem}
+.htable td{padding:6px 4px;border-bottom:1px solid var(--sand-l)}
+.htable input[type=time]{padding:6px 8px;width:auto}
+.htable input[type=checkbox]{width:18px;height:18px;accent-color:var(--sage-d)}
+.blist{display:grid;gap:8px;margin-top:12px}
+.bitem{display:flex;justify-content:space-between;align-items:center;gap:10px;background:#fff;border:1px solid var(--sand);border-radius:10px;padding:10px 12px;font-size:.92rem}
+.ttable{width:100%;border-collapse:collapse;background:#fff;border-radius:12px;overflow:hidden;border:1px solid var(--sand)}
+.ttable th{text-align:left;font-size:.8rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);padding:10px;background:var(--sand-l)}
+.ttable td{padding:6px 10px;border-top:1px solid var(--sand-l)}
+.ttable input,.ttable select{padding:7px 9px}
+.mail-layout{display:grid;grid-template-columns:340px 1fr;gap:20px;align-items:start}
+@media(max-width:860px){.mail-layout{grid-template-columns:1fr}}
+.mlist{display:grid;gap:6px;max-height:640px;overflow:auto}
+.mitem{background:#fff;border:1.5px solid var(--sand);border-radius:10px;padding:10px 12px;cursor:pointer;text-align:left;font:inherit;color:inherit}
+.mitem.on{border-color:var(--sage-d);background:var(--sage-l)}
+.mitem b{display:block;font-size:.9rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mitem small{color:var(--muted);font-size:.8rem}
+.tpl-btns{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:18px}
+.tbox{max-height:220px;overflow:auto;border:1.5px solid var(--sand);border-radius:10px;padding:6px 10px;background:#fff}
+.tbox label{display:flex;gap:8px;align-items:center;font-weight:400;padding:3px 0;font-size:.92rem}
+.tbox input{width:16px;height:16px;accent-color:var(--sage-d)}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:11px 20px;border-radius:999px;z-index:200;font-size:.93rem;box-shadow:0 8px 24px rgba(0,0,0,.2)}
+.proto{background:var(--ink);color:#efe7dd;font-size:.82rem;text-align:center;padding:6px 12px}
+.proto b{color:#fff}
+</style>
+</head>
+<body>
+<div class="proto"><b>Prototype</b> · alle foto's, prijzen, tijden en contactgegevens zijn voorbeelden</div>
+<header class="topbar">
+  <div class="wrap">
+    <a class="logo" href="#home" aria-label="itsyourbeauty by Shirley, naar de beginpagina"><span class="mark" data-ic="scissors"></span><span class="lt">itsyourbeauty<small>by Shirley</small></span></a>
+    <button class="menu-btn" id="menuBtn" aria-label="Menu openen" aria-expanded="false"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+    <nav class="nav" id="nav" aria-label="Hoofdmenu">
+      <a href="#home">Home</a>
+      <a href="#behandelingen">Behandelingen</a>
+      <a href="#over-ons">Over ons</a>
+      <a href="#huisregels">Huisregels</a>
+      <a href="#contact">Contact</a>
+      <a href="#afspraak" class="cta">Afspraak maken</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+<!-- HOME -->
+<section class="page" data-page="home">
+  <div class="hero">
+    <div class="hero-bg" aria-hidden="true">
+      <svg viewBox="0 0 1600 1000" preserveAspectRatio="xMidYMid slice">
+        <defs><linearGradient id="hg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#DCC9B5"/><stop offset=".55" stop-color="#B9A48C"/><stop offset="1" stop-color="#7D8F7A"/></linearGradient></defs>
+        <rect width="1600" height="1000" fill="url(#hg)"/>
+        <rect x="1060" y="60" width="440" height="600" rx="18" fill="#F7F3EE" opacity=".6"/>
+        <rect x="1060" y="350" width="440" height="10" fill="#B9A48C" opacity=".6"/>
+        <rect x="1275" y="60" width="10" height="600" fill="#B9A48C" opacity=".6"/>
+        <ellipse cx="600" cy="360" rx="200" ry="260" fill="#EFE8DF" opacity=".8"/>
+        <ellipse cx="600" cy="360" rx="168" ry="226" fill="#A9B8A4" opacity=".55"/>
+        <circle cx="600" cy="70" r="46" fill="#FFF6E6" opacity=".9"/>
+        <rect x="260" y="640" width="720" height="56" rx="6" fill="#8C6A55"/>
+        <rect x="280" y="696" width="680" height="320" fill="#6E5444" opacity=".9"/>
+        <rect x="330" y="560" width="34" height="80" rx="8" fill="#F7F3EE"/>
+        <rect x="380" y="580" width="28" height="60" rx="8" fill="#C0785A"/>
+        <rect x="830" y="575" width="40" height="65" rx="10" fill="#E6DCCF"/>
+        <rect x="1090" y="560" width="270" height="250" rx="64" fill="#C0785A"/>
+        <rect x="1066" y="770" width="318" height="74" rx="32" fill="#A65F3F"/>
+        <rect x="1210" y="840" width="32" height="150" fill="#3A2F2A"/>
+        <ellipse cx="1226" cy="990" rx="120" ry="18" fill="#3A2F2A"/>
+        <ellipse cx="150" cy="560" rx="130" ry="220" fill="#5C6B59"/>
+        <ellipse cx="230" cy="470" rx="70" ry="150" fill="#7D8F7A"/>
+        <rect x="90" y="720" width="130" height="160" rx="12" fill="#E6DCCF"/>
+      </svg>
+    </div>
+    <div class="hero-inner">
+      <p class="eyebrow">Kapsalon aan huis · <span>[Plaatsnaam]</span></p>
+      <h1>itsyourbeauty</h1><p class="by">by Shirley</p>
+      <p class="lead">Persoonlijke haarverzorging in een rustige, huiselijke salon. Met aandacht, zonder haast.</p>
+      <div class="btns">
+        <a class="btn primary" href="#afspraak"><span data-ic="calendar"></span>Afspraak maken</a>
+        <a class="btn ghost" href="#behandelingen">Bekijk prijzen</a>
+      </div>
+    </div>
+    <span class="ph-note">Achtergrond: voorbeeldbeeld, wordt een vervaagde foto van de salon</span>
+  </div>
+
+  <div class="section">
+    <div class="wrap intro">
+      <div>
+        <p class="eyebrow" style="color:var(--terra-d)">Welkom</p>
+        <h2>Even tijd voor jezelf</h2>
+        <p>Bij itsyourbeauty word je geholpen in een kleine, rustige salon. Geen drukte of lange wachtrijen, wel een kapster die echt de tijd voor je neemt. Of je nu komt voor een frisse coupe, een nieuwe kleur of iets bijzonders voor een feest.</p>
+        <p class="muted">Kies online je behandeling en een tijd die jou uitkomt. Shirley of haar collega bevestigt je afspraak zo snel mogelijk per e-mail.</p>
+        <div class="btns" style="margin-top:20px"><a class="btn sage" href="#afspraak">Plan je afspraak</a><a class="btn light" href="#over-ons">Maak kennis</a></div>
+      </div>
+      <div class="facts">
+        <div class="fact"><b>2 kapsters</b><span>Shirley en [Kapster 2]</span></div>
+        <div class="fact"><b>Online boeken</b><span>Altijd en overal</span></div>
+        <div class="fact"><b>Pin of contant</b><span>Betalen ter plekke</span></div>
+        <div class="fact"><b>Gratis annuleren</b><span>Tot 24 uur van tevoren</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section alt">
+    <div class="wrap">
+      <div class="sec-head"><h2>Waar ben je naar op zoek?</h2></div>
+      <div class="tiles">
+        <a class="tile" href="#behandelingen"><span class="ic" data-ic="scissors"></span><h3>Behandelingen &amp; prijzen</h3><p>Alle behandelingen met prijs, duur en voorbeeldfoto's.</p><span class="go">Bekijk de prijslijst →</span></a>
+        <a class="tile" href="#afspraak"><span class="ic" data-ic="calendar"></span><h3>Afspraak maken</h3><p>Openingstijden en direct een vrij tijdstip aanvragen.</p><span class="go">Plan een afspraak →</span></a>
+        <a class="tile" href="#over-ons"><span class="ic" data-ic="users"></span><h3>Over ons</h3><p>Maak kennis met Shirley en haar collega en bekijk ons werk.</p><span class="go">Maak kennis →</span></a>
+        <a class="tile" href="#contact"><span class="ic" data-ic="pin"></span><h3>Contact &amp; route</h3><p>Adres, telefoon en hoe je de ingang van de salon vindt.</p><span class="go">Naar contact →</span></a>
+        <a class="tile" href="#huisregels"><span class="ic" data-ic="info"></span><h3>Huisregels &amp; vragen</h3><p>Annuleren, te laat komen, betalen en meer.</p><span class="go">Lees verder →</span></a>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="wrap">
+      <div class="sec-head"><h2>Populaire behandelingen</h2><a class="btn light sm" href="#behandelingen">Alle behandelingen</a></div>
+      <div class="cards" id="featured"></div>
+    </div>
+  </div>
+</section>
+
+<!-- BEHANDELINGEN -->
+<section class="page" data-page="behandelingen" hidden>
+  <div class="wrap">
+    <div class="page-head">
+      <h1>Behandelingen &amp; prijzen</h1>
+      <p>Bij elke behandeling zie je hoe lang die duurt. Kies je meerdere behandelingen, dan telt de tijd vanzelf op bij het plannen van je afspraak.</p>
+    </div>
+    <div class="note" style="margin-bottom:8px"><span data-ic="card"></span><div>Betalen kan ter plekke met <b>pin of contant</b>. Prijzen zijn een indicatie; bij erg lang of dik haar kan de prijs iets afwijken. Dat wordt altijd vooraf besproken.</div></div>
+    <nav class="catnav" id="catnav" aria-label="Categorieën"></nav>
+    <div id="tlist"></div>
+  </div>
+</section>
+
+<!-- AFSPRAAK -->
+<section class="page" data-page="afspraak" hidden>
+  <div class="wrap">
+    <div class="page-head">
+      <h1>Afspraak maken</h1>
+      <p>Kies je behandeling, je kapster en een vrij tijdstip. Je verstuurt een <b>aanvraag</b>: de kapster bevestigt die zo snel mogelijk per e-mail.</p>
+    </div>
+    <div class="booking">
+      <div>
+        <ol class="stepper" id="stepper"></ol>
+        <div class="panel" id="bkMain"></div>
+      </div>
+      <aside class="side">
+        <div class="panel sum" id="bkSum"></div>
+        <div class="panel"><h3>Openingstijden</h3><div class="hours-slot"></div><p class="small muted" style="margin:12px 0 0">Op feestdagen kunnen de tijden afwijken. Vrije dagen van de kapsters zie je vanzelf in de agenda.</p></div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- OVER ONS -->
+<section class="page" data-page="over-ons" hidden>
+  <div class="wrap">
+    <div class="page-head"><h1>Over ons</h1><p>Een kleine salon met een persoonlijke aanpak. Je wordt altijd geholpen door een van ons tweeën.</p></div>
+    <div class="team" id="team"></div>
+    <div class="section" style="padding-bottom:72px">
+      <div class="sec-head"><h2>Ons werk</h2><span class="chip">Voorbeeldfoto's, worden vervangen door echte foto's</span></div>
+      <div class="portfolio" id="portfolio"></div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="page" data-page="contact" hidden>
+  <div class="wrap">
+    <div class="page-head"><h1>Contact</h1><p>Vragen, of liever telefonisch een afspraak maken? Neem gerust contact op.</p></div>
+    <div class="contact-grid">
+      <div class="panel">
+        <h3>Gegevens</h3>
+        <ul class="clist" id="clist"></ul>
+      </div>
+      <div style="display:grid;gap:22px">
+        <div class="panel">
+          <h3>Hoe vind je ons?</h3>
+          <p id="routeTxt"></p>
+          <div class="map" aria-label="Voorbeeld plattegrond">
+            <svg viewBox="0 0 640 400">
+              <rect width="640" height="400" fill="#EEF2EC"/>
+              <rect x="0" y="330" width="640" height="46" fill="#E6DCCF"/>
+              <text x="20" y="359" font-family="DM Sans" font-size="14" fill="#6F625A">[Straatnaam]</text>
+              <rect x="140" y="150" width="190" height="150" rx="6" fill="#fff" stroke="#B9A48C" stroke-width="2"/>
+              <text x="235" y="230" text-anchor="middle" font-family="DM Sans" font-size="15" fill="#6F625A">Woonhuis</text>
+              <text x="235" y="250" text-anchor="middle" font-family="DM Sans" font-size="12" fill="#9b3b2b">niet aanbellen</text>
+              <path d="M360 330 V120 H430" fill="none" stroke="#C0785A" stroke-width="4" stroke-dasharray="10 8" stroke-linecap="round"/>
+              <rect x="430" y="50" width="160" height="120" rx="6" fill="#7D8F7A"/>
+              <text x="510" y="105" text-anchor="middle" font-family="Cormorant Garamond" font-weight="700" font-size="22" fill="#fff">Salon</text>
+              <text x="510" y="128" text-anchor="middle" font-family="DM Sans" font-size="12" fill="#fff">ingang</text>
+              <circle cx="360" cy="330" r="9" fill="#A65F3F"/>
+              <text x="378" y="316" font-family="DM Sans" font-size="13" fill="#A65F3F">zijpad</text>
+            </svg>
+          </div>
+          <p class="small muted" style="margin:10px 0 0">Schematisch voorbeeld. Later te vervangen door een echte kaart en een foto van de ingang.</p>
+        </div>
+        <div class="panel"><h3>Openingstijden</h3><div class="hours-slot"></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HUISREGELS -->
+<section class="page" data-page="huisregels" hidden>
+  <div class="wrap">
+    <div class="page-head"><h1>Huisregels &amp; veelgestelde vragen</h1><p>Zo weet iedereen waar hij aan toe is.</p></div>
+    <div class="faq prose" style="padding-bottom:72px">
+      <details open><summary>Hoe maak ik een afspraak?</summary><p>Via de pagina <a href="#afspraak">Afspraak maken</a> kies je een behandeling, een kapster en een vrij tijdstip. Je ontvangt direct een mail dat je aanvraag binnen is. Zodra de kapster de afspraak bevestigt, krijg je een tweede mail. Pas dan is je afspraak definitief.</p></details>
+      <details><summary>Kan ik mijn afspraak annuleren of verzetten?</summary><p>Ja. Tot 24 uur voor de afspraak annuleer of verzet je kosteloos, via de link in je bevestigingsmail of telefonisch. Bij later annuleren of niet verschijnen kunnen we de kosten van de behandeling in rekening brengen.</p></details>
+      <details><summary>Wat als ik te laat ben?</summary><p>Laat het ons even weten. Ben je meer dan 15 minuten te laat, dan kan het zijn dat de behandeling ingekort of verplaatst moet worden, zodat de volgende klant niet hoeft te wachten.</p></details>
+      <details><summary>Hoe kan ik betalen?</summary><p>Betalen gebeurt na de behandeling in de salon, met pin of contant.</p></details>
+      <details><summary>Waar is de ingang?</summary><p>De salon zit in een apart gebouw achter het huis. Loop via het zijpad naar achteren; bel niet aan bij de voordeur. Zie ook <a href="#contact">Contact &amp; route</a>.</p></details>
+      <details><summary>Kan ik iemand meenemen?</summary><p>De salon is klein. Een begeleider of een kind dat ook geknipt wordt is welkom; liever geen grote groepen.</p></details>
+      <details><summary>Ik wil een grote kleurverandering. Kan dat?</summary><p>Zeker. Voor grote veranderingen (bijvoorbeeld van donker naar blond) plannen we graag eerst een kort gratis adviesgesprek. Zet het in de opmerking bij je aanvraag.</p></details>
+    </div>
+  </div>
+</section>
+
+<!-- PRIVACY -->
+<section class="page" data-page="privacy" hidden>
+  <div class="wrap">
+    <div class="page-head"><h1>Privacyverklaring</h1><p>Voorbeeldtekst. De definitieve tekst wordt opgesteld zodra de techniek en de opslag bekend zijn.</p></div>
+    <div class="prose">
+      <h2>Welke gegevens bewaren we?</h2><p>Bij het aanvragen van een afspraak vragen we je naam, e-mailadres, telefoonnummer en eventueel een opmerking. We gebruiken deze gegevens alleen om je afspraak te plannen, te bevestigen en je een herinnering te sturen.</p>
+      <h2>Hoe lang bewaren we ze?</h2><p><span class="placeholder">[Bijvoorbeeld: tot 2 jaar na je laatste afspraak]</span>. Daarna worden je gegevens verwijderd.</p>
+      <h2>Met wie delen we ze?</h2><p>Niet met anderen, behalve met de dienst die onze e-mails verstuurt en de partij die de website host. Met hen zijn afspraken gemaakt over de beveiliging van je gegevens.</p>
+      <h2>Je rechten</h2><p>Je mag altijd vragen welke gegevens we van je hebben, en vragen om ze aan te passen of te verwijderen. Neem daarvoor contact op via <span class="placeholder">info@[domein].nl</span>.</p>
+    </div>
+  </div>
+</section>
+
+<!-- BEHEER -->
+<section class="page" data-page="beheer" hidden>
+  <div class="wrap admin" id="adminRoot"></div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="fgrid">
+      <div>
+        <h4>itsyourbeauty by Shirley</h4>
+        <p style="color:#d4c8bc;margin-bottom:10px">Persoonlijke haarverzorging in een rustige, huiselijke salon.</p>
+        <div id="fcontact" style="font-size:.93rem"></div>
+      </div>
+      <div><h4>Openingstijden</h4><div class="hours-slot"></div></div>
+      <div><h4>Snel naar</h4>
+        <ul><li><a href="#behandelingen">Behandelingen &amp; prijzen</a></li><li><a href="#afspraak">Afspraak maken</a></li><li><a href="#over-ons">Over ons</a></li><li><a href="#contact">Contact &amp; route</a></li><li><a href="#huisregels">Huisregels</a></li><li><a href="#privacy">Privacyverklaring</a></li><li style="margin-top:8px"><a href="#beheer">Inloggen medewerkers</a></li></ul>
+      </div>
+    </div>
+    <div class="fbottom"><span>© itsyourbeauty by Shirley · KvK <span>[00000000]</span></span><span>Prototype: gegevens worden alleen in deze browser bewaard</span></div>
+  </div>
+</footer>
+
+<div class="modal" id="modal" hidden role="dialog" aria-modal="true">
+  <div class="modal-card"><button class="iconbtn modal-x" id="modalX" aria-label="Sluiten"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button><div id="modalBody"></div></div>
+</div>
+
+<script>
+/* ---------- helpers ---------- */
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const pad=n=>String(n).padStart(2,'0');
+const hm=m=>pad(Math.floor(m/60))+':'+pad(m%60);
+const toMin=s=>{const[a,b]=String(s).split(':').map(Number);return a*60+(b||0)};
+const ds=d=>d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+const pd=s=>{const[y,m,d]=s.split('-').map(Number);return new Date(y,m-1,d)};
+const addDays=(d,n)=>{const x=new Date(d);x.setDate(x.getDate()+n);return x};
+const today0=()=>{const d=new Date();d.setHours(0,0,0,0);return d};
+const cap=s=>s.charAt(0).toUpperCase()+s.slice(1);
+const euro=n=>'€ '+Number(n).toFixed(2).replace('.',',');
+const fmtLong=s=>cap(pd(s).toLocaleDateString('nl-NL',{weekday:'long',day:'numeric',month:'long'}));
+const fmtShort=s=>pd(s).toLocaleDateString('nl-NL',{weekday:'short',day:'numeric',month:'short'});
+const durTxt=m=>m<60?m+' min':Math.floor(m/60)+' uur'+(m%60?' '+(m%60)+' min':'');
+const DAYS=['zondag','maandag','dinsdag','woensdag','donderdag','vrijdag','zaterdag'];
+const DAYORDER=[1,2,3,4,5,6,0];
+function relTime(t){const m=Math.round((Date.now()-t)/60000);if(m<1)return'zojuist';if(m<60)return m+' min geleden';const h=Math.round(m/60);if(h<24)return h+' uur geleden';return Math.round(h/24)+' dag(en) geleden'}
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+function toast(msg){const t=document.createElement('div');t.className='toast';t.textContent=msg;document.body.appendChild(t);setTimeout(()=>t.remove(),2600)}
+
+/* ---------- icons ---------- */
+const P={
+ scissors:'<circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M20 4 8.12 15.88M14.47 14.48 20 20M8.12 8.12 12 12"/>',
+ comb:'<path d="M3 7h18v4H3z"/><path d="M5 11v7M8 11v7M11 11v7M14 11v7M17 11v7M20 11v5"/>',
+ smile:'<circle cx="12" cy="12" r="9"/><path d="M8.5 14.5s1.3 2 3.5 2 3.5-2 3.5-2M9 9.5h.01M15 9.5h.01"/>',
+ drop:'<path d="M12 2.7s6 6.6 6 11.3a6 6 0 0 1-12 0C6 9.3 12 2.7 12 2.7z"/><path d="M9 14a3 3 0 0 0 3 3"/>',
+ sparkle:'<path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/><path d="M19 16l.7 2 2 .7-2 .7-.7 2-.7-2-2-.7 2-.7z"/>',
+ calendar:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>',
+ clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+ users:'<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.5 3.4-5.5 6.5-5.5s5.7 2 6.5 5.5"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18 14.8c1.8.7 3 2.5 3.5 5.2"/>',
+ pin:'<path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/>',
+ info:'<circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5h.01"/>',
+ phone:'<path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/>',
+ mail:'<rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/>',
+ chat:'<path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/>',
+ card:'<rect x="2.5" y="5" width="19" height="14" rx="2"/><path d="M2.5 10h19M6 15h4"/>',
+ check:'<path d="m5 12.5 4.5 4.5L19 7.5"/>',
+ left:'<path d="m15 18-6-6 6-6"/>',right:'<path d="m9 18 6-6-6-6"/>',
+ clip:'<path d="m21 11-8.5 8.5a5 5 0 0 1-7-7L14 4a3.5 3.5 0 0 1 5 5l-8.5 8.5a2 2 0 0 1-3-3L15 7"/>',
+ car:'<path d="M5 17h14v-5l-2-5H7l-2 5z"/><circle cx="8" cy="17" r="2"/><circle cx="16" cy="17" r="2"/>',
+ plus:'<path d="M12 5v14M5 12h14"/>',
+ logout:'<path d="M15 4h3a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-3M10 16l4-4-4-4M14 12H4"/>',
+ insta:'<rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><path d="M17.5 6.5h.01"/>',
+ trash:'<path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/>'
+};
+const ic=(n,cls='i')=>`<svg class="${cls}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${P[n]||''}</svg>`;
+function fillIcons(root=document){$$('[data-ic]',root).forEach(el=>{if(!el.dataset.done){el.insertAdjacentHTML('afterbegin',ic(el.dataset.ic));el.dataset.done=1}})}
+
+/* ---------- vaste gegevens ---------- */
+const LS='itsyourbeauty_proto_v2', BUF=10, STEP=15, LEAD_H=24, MAX_DAYS=56;
+const BLOCKING=['aangevraagd','bevestigd','voorgesteld'];
+const CONTACT={naam:'itsyourbeauty by Shirley',insta:'https://www.instagram.com/itsyourbeautybyshirley/',instaH:'@itsyourbeautybyshirley',straat:'[Straatnaam 00]',plaats:'[0000 AA Plaatsnaam]',tel:'06 – 12 34 56 78',email:'info@[domein].nl',
+ route:'De salon zit in het losse gebouw achter het huis. Loop via het zijpad langs het huis naar achteren; de ingang is de deur met het bordje “Salon”. Je hoeft dus niet aan te bellen bij de voordeur.',
+ parkeren:'[Parkeren: bijvoorbeeld gratis voor de deur of in de straat]'};
+const CATS=[
+ {id:'dames',name:'Dames',icon:'scissors',g:['#E4CDB8','#B98C6E']},
+ {id:'heren',name:'Heren',icon:'comb',g:['#D5DED1','#8A9D86']},
+ {id:'kinderen',name:'Kinderen',icon:'smile',g:['#F0E0C8','#D2A777']},
+ {id:'kleuren',name:'Kleuren',icon:'drop',g:['#E9C9B8','#B4694B']},
+ {id:'extra',name:'Extra & styling',icon:'sparkle',g:['#E6DCCF','#A8957F']}
+];
+const DEFAULT_T=[
+ {id:'t1',cat:'dames',name:'Knippen',desc:'Wassen, knippen en föhnen.',price:42,dur:60,feat:1},
+ {id:'t2',cat:'dames',name:'Knippen kort haar',desc:'Wassen, knippen en stylen van kort haar.',price:36,dur:45},
+ {id:'t3',cat:'dames',name:'Wassen & föhnen',desc:'Wassen en in model föhnen.',price:28,dur:30},
+ {id:'t4',cat:'dames',name:'Opsteken / feestkapsel',desc:'Voor bruiloft, gala of feest. Inclusief proefgesprek.',price:55,dur:60},
+ {id:'t5',cat:'heren',name:'Knippen heren',desc:'Knippen en stylen.',price:26,dur:30,feat:1},
+ {id:'t6',cat:'heren',name:'Knippen + baard',desc:'Knippen en baard in model trimmen.',price:34,dur:45},
+ {id:'t7',cat:'heren',name:'Tondeuse',desc:'Volledig met de tondeuse, één lengte.',price:20,dur:15},
+ {id:'t8',cat:'kinderen',name:'Kinderknipbeurt',desc:'Tot en met 12 jaar.',price:18,dur:30},
+ {id:'t9',cat:'kleuren',name:'Uitgroei kleuren',desc:'Uitgroei bijwerken, inclusief föhnen.',price:55,dur:75},
+ {id:'t10',cat:'kleuren',name:'Volledig kleuren',desc:'Egale kleur over het hele haar.',price:68,dur:90},
+ {id:'t11',cat:'kleuren',name:'Highlights (folie)',desc:'Lichte accenten met folie.',price:85,dur:120},
+ {id:'t12',cat:'kleuren',name:'Balayage',desc:'Natuurlijk, met de hand aangebracht kleurverloop.',price:115,dur:150,feat:1},
+ {id:'t13',cat:'extra',name:'Haarmasker',desc:'Intensieve verzorgende behandeling.',price:12,dur:15},
+ {id:'t14',cat:'extra',name:'Toner / gloss',desc:'Frist de kleur op en geeft glans.',price:25,dur:30}
+];
+const DEFAULT_STAFF=[
+ {id:'shirley',name:'Shirley',role:'owner',title:'Eigenaresse & kapster',color:'#5C6B59',email:'shirley@[domein].nl',
+  bio:'Shirley begon itsyourbeauty om klanten in alle rust te kunnen helpen. Ze is gespecialiseerd in kleuren en balayage, en houdt van advies op maat.',
+  hours:{2:[540,1050],3:[540,1050],4:[540,1200],6:[540,840]}},
+ {id:'kapster2',name:'[Kapster 2]',role:'staff',title:'Kapster',color:'#A65F3F',email:'kapster2@[domein].nl',
+  bio:'[Korte introductie van de tweede kapster: specialisaties, ervaring en iets persoonlijks.]',
+  hours:{3:[600,1050],4:[540,1200],5:[540,1050],6:[540,840]}}
+];
+
+/* ---------- state ---------- */
+let S;
+function save(){try{localStorage.setItem(LS,JSON.stringify(S))}catch(e){}}
+function load(){try{const r=localStorage.getItem(LS);if(r){S=JSON.parse(r);if(S&&S.appts)return}}catch(e){}S=seed();save()}
+const T=id=>S.treatments.find(t=>t.id===id);
+const staffById=id=>S.staff.find(s=>s.id===id);
+const catById=id=>CATS.find(c=>c.id===id)||CATS[4];
+const blocked=(sid,date)=>S.blocks.some(b=>b.staff===sid&&date>=b.from&&date<=b.to);
+function staffHours(sid,date){const s=staffById(sid);if(!s)return null;const h=s.hours[pd(date).getDay()];if(!h||blocked(sid,date))return null;return h}
+function openingFor(wd){let f=null,t=null;S.staff.forEach(s=>{const h=s.hours[wd];if(h){f=f==null?h[0]:Math.min(f,h[0]);t=t==null?h[1]:Math.max(t,h[1])}});return f==null?null:[f,t]}
+function slotsFor(date,sid,dur,o={}){
+ const h=staffHours(sid,date);if(!h||!dur)return[];
+ const busy=S.appts.filter(a=>a.staff===sid&&a.date===date&&BLOCKING.includes(a.status)&&a.id!==o.exclude);
+ const lead=Date.now()+LEAD_H*3600e3, base=pd(date).getTime(), res=[];
+ for(let t=h[0];t+dur<=h[1];t+=STEP){
+  if(!o.ignoreLead&&base+t*60000<lead)continue;
+  if(busy.some(a=>t<a.start+a.dur+BUF&&a.start<t+dur+BUF))continue;
+  res.push(t);
+ }
+ return res;
+}
+function makeAppt(p){
+ const items=p.items.map(T).filter(Boolean);
+ return {id:'A'+(S.seq++),created:p.created||Date.now(),status:p.status||'aangevraagd',staff:p.staff,date:p.date,start:p.start,
+  dur:items.reduce((s,t)=>s+t.dur,0),price:items.reduce((s,t)=>s+t.price,0),items:p.items.slice(),labels:items.map(t=>t.name),
+  name:p.name,email:p.email||'',phone:p.phone||'',note:p.note||'',source:p.source||'online',reason:''};
+}
+function seed(){
+ S={treatments:JSON.parse(JSON.stringify(DEFAULT_T)),staff:JSON.parse(JSON.stringify(DEFAULT_STAFF)),appts:[],blocks:[],outbox:[],seq:1};
+ const r=mulberry32(42), t0=today0();
+ const names=['Anouk de Vries','Mark Jansen','Sanne Bakker','Lotte Visser','Peter Smit','Fleur Mulder','Daan de Boer','Eva Bos','Noah Vos','Iris Peters','Jeroen Hendriks','Lisa van Dijk','Tim Dekker','Emma Brouwer','Ruud Willems','Marloes Kok','Bram Jacobs','Nina de Graaf'];
+ const mail=n=>n.toLowerCase().replace(/[^a-z ]/g,'').trim().split(' ').join('.')+'@voorbeeld.nl';
+ const tel=()=>'06 '+Math.floor(10000000+r()*89999999);
+ const combos=[['t1'],['t1'],['t2'],['t3'],['t5'],['t5'],['t6'],['t7'],['t8'],['t9','t1'],['t10'],['t11'],['t12'],['t1','t13'],['t4'],['t14','t3']];
+ S.blocks.push({id:'B1',staff:'kapster2',from:ds(addDays(t0,17)),to:ds(addDays(t0,19)),reason:'Vakantie'});
+ for(let i=-6;i<24;i++){const date=ds(addDays(t0,i));
+  S.staff.forEach(s=>{const n=1+Math.floor(r()*3.5);
+   for(let k=0;k<n;k++){const items=combos[Math.floor(r()*combos.length)];const dur=items.reduce((a,id)=>a+T(id).dur,0);
+    const sl=slotsFor(date,s.id,dur,{ignoreLead:true});if(!sl.length)continue;const start=sl[Math.floor(r()*sl.length)];const nm=names[Math.floor(r()*names.length)];
+    S.appts.push(makeAppt({staff:s.id,date,start,items,name:nm,email:mail(nm),phone:tel(),status:'bevestigd',source:r()<.3?'handmatig':'online',created:Date.now()-864e5*7}));}
+  });
+ }
+ const pend=[{d:3,s:'shirley',i:['t9','t1'],n:'Yvonne Meijer',note:'Graag iets donkerder dan vorige keer.'},{d:4,s:'kapster2',i:['t5'],n:'Kevin Hoekstra',note:''},{d:6,s:'shirley',i:['t12'],n:'Sophie Kramer',note:'Eerste keer balayage, mijn haar is vrij lang.'},{d:8,s:'kapster2',i:['t8','t8'],n:'Jamila Bouzid',note:'Twee kinderen (6 en 9 jaar), achter elkaar.'}];
+ pend.forEach((p,j)=>{for(let x=0;x<5;x++){const date=ds(addDays(t0,p.d+x));const dur=p.i.reduce((a,id)=>a+T(id).dur,0);const sl=slotsFor(date,p.s,dur);if(sl.length){S.appts.push(makeAppt({staff:p.s,date,start:sl[Math.floor(sl.length/2)],items:p.i,name:p.n,email:mail(p.n),phone:tel(),note:p.note,status:'aangevraagd',created:Date.now()-(j*5+1)*3600e3}));break}}});
+ return S;
+}
+
+/* ---------- mails ---------- */
+function contactMail(){return `<div class="mail-foot"><b>${CONTACT.naam}</b><br>${CONTACT.straat}, ${CONTACT.plaats}<br>Tel. ${CONTACT.tel} · ${CONTACT.email}<br>Instagram: ${CONTACT.instaH}<br><br><b>Hoe vind je ons?</b> ${CONTACT.route}<br>${CONTACT.parkeren}<br><br>Betalen kan ter plekke met pin of contant.</div>`}
+function detailRows(a){const s=staffById(a.staff);return `<table class="mt"><tr><td>Datum</td><td>${fmtLong(a.date)}</td></tr><tr><td>Tijd</td><td>${hm(a.start)} – ${hm(a.start+a.dur)} (${durTxt(a.dur)})</td></tr><tr><td>Behandeling</td><td>${esc(a.labels.join(' + '))}</td></tr><tr><td>Kapster</td><td>${esc(s?s.name:'')}</td></tr><tr><td>Prijs (indicatie)</td><td>${euro(a.price)}</td></tr></table>`}
+function mailFor(type,a,extra={}){
+ const s=staffById(a.staff), first=esc(a.name.split(' ')[0]), when=`${fmtShort(a.date)} ${hm(a.start)}`;
+ const M={
+  ontvangen:{to:a.email,subj:`We hebben je aanvraag ontvangen (${when})`,body:`<p>Beste ${first},</p><p>Bedankt voor je aanvraag! ${esc(s.name)} bekijkt je verzoek zo snel mogelijk. Je ontvangt binnen 24 uur een mail of je afspraak definitief is.</p>${detailRows(a)}<p><b>Let op:</b> je afspraak is pas definitief na onze bevestiging.</p><a class="mail-btn alt" href="#" onclick="return false">Aanvraag intrekken</a>`},
+  bevestigd:{to:a.email,attach:'afspraak.ics',subj:`Je afspraak is bevestigd: ${when}`,body:`<p>Beste ${first},</p><p>Goed nieuws: je afspraak bij ${CONTACT.naam} is <b>bevestigd</b>. We zien je graag!</p>${detailRows(a)}<p>Voeg de afspraak met één klik toe aan je agenda via de bijlage. Een dag van tevoren sturen we je een herinnering.</p><a class="mail-btn" href="#" onclick="return false">Toevoegen aan agenda</a><a class="mail-btn alt" href="#" onclick="return false">Afspraak annuleren of verzetten</a><p class="small muted">Kosteloos annuleren of verzetten kan tot 24 uur van tevoren.</p>`},
+  voorstel:{to:a.email,subj:`Voorstel voor een ander tijdstip: ${when}`,body:`<p>Beste ${first},</p><p>Bedankt voor je aanvraag. Helaas lukt het gevraagde tijdstip${extra.oldWhen?' ('+esc(extra.oldWhen)+')':''} niet. We stellen je graag het volgende moment voor:</p>${detailRows(a)}<p>Past dit? Laat het ons weten met een van de knoppen hieronder.</p><a class="mail-btn" href="#" onclick="return false">Ja, dit past</a><a class="mail-btn alt" href="#" onclick="return false">Kies een ander moment</a>`},
+  afgewezen:{to:a.email,subj:`Je aanvraag voor ${when} kunnen we helaas niet inplannen`,body:`<p>Beste ${first},</p><p>Helaas kunnen we je aanvraag voor ${fmtLong(a.date)} om ${hm(a.start)} niet inplannen.</p>${a.reason?`<p><i>“${esc(a.reason)}”</i></p>`:''}<p>Je bent van harte welkom om een ander moment te kiezen.</p><a class="mail-btn" href="#" onclick="return false">Nieuwe afspraak plannen</a>`},
+  geannuleerd:{to:a.email,subj:`Je afspraak van ${when} is geannuleerd`,body:`<p>Beste ${first},</p><p>Je afspraak is geannuleerd.</p>${detailRows(a)}${a.reason?`<p><i>“${esc(a.reason)}”</i></p>`:''}<p>Wil je een nieuwe afspraak maken? Dat kan altijd online.</p><a class="mail-btn" href="#" onclick="return false">Nieuwe afspraak plannen</a>`},
+  herinnering:{to:a.email,attach:'afspraak.ics',subj:`Herinnering: morgen om ${hm(a.start)} bij ${CONTACT.naam}`,body:`<p>Beste ${first},</p><p>Een vriendelijke herinnering: <b>morgen</b> heb je een afspraak bij ons.</p>${detailRows(a)}<p>Lukt het toch niet? Laat het ons zo snel mogelijk weten.</p><a class="mail-btn alt" href="#" onclick="return false">Afspraak annuleren</a>`},
+  melding:{to:s.email,subj:`Nieuw verzoek: ${a.name} – ${when}`,body:`<p>Hoi ${esc(s.name)},</p><p>Er is een nieuwe afspraakaanvraag binnengekomen.</p>${detailRows(a)}<table class="mt"><tr><td>Klant</td><td>${esc(a.name)}</td></tr><tr><td>Telefoon</td><td>${esc(a.phone)}</td></tr><tr><td>E-mail</td><td>${esc(a.email)}</td></tr>${a.note?`<tr><td>Opmerking</td><td>${esc(a.note)}</td></tr>`:''}</table><a class="mail-btn" href="#" onclick="return false">Verzoek behandelen</a>`}
+ };
+ const m=M[type];return {...m,type,apptId:a.id,at:Date.now(),contact:type!=='melding'};
+}
+const MAILTYPE={ontvangen:'Aanvraag ontvangen',bevestigd:'Bevestiging',voorstel:'Ander tijdstip',afgewezen:'Afwijzing',geannuleerd:'Annulering',herinnering:'Herinnering',melding:'Melding kapster'};
+function sendMail(type,a,extra){if(!a.email)return null;const m=mailFor(type,a,extra);S.outbox.unshift(m);if(S.outbox.length>80)S.outbox.length=80;save();return m}
+function mailHTML(m){return `<div class="mail"><div class="mail-h"><div><span class="k">Van</span>${CONTACT.naam} &lt;${CONTACT.email}&gt;</div><div><span class="k">Aan</span>${esc(m.to)}</div><div><span class="k">Onderwerp</span><b>${esc(m.subj)}</b></div>${m.attach?`<div><span class="k">Bijlage</span><span class="att">${ic('clip')}${m.attach}</span></div>`:''}</div><div class="mail-b"><div class="mail-logo">${ic('scissors')}${CONTACT.naam}</div>${m.body}${m.contact?contactMail():''}</div></div>`}
+function showMail(m,title){if(!m){toast('Geen e-mailadres bekend: er is geen mail verstuurd');return}openModal(`<h3>${esc(title||'Voorbeeld e-mail')}</h3><p class="small muted">In het prototype wordt de mail niet echt verstuurd. Zo komt hij er straks uit te zien:</p>${mailHTML(m)}<div class="btns" style="margin-top:16px;justify-content:flex-end"><button class="btn sage" data-close>Sluiten</button></div>`,true)}
+
+/* ---------- modal ---------- */
+let lastFocus=null;
+function openModal(html,wide){lastFocus=document.activeElement;$('#modalBody').innerHTML=html;$('#modal').hidden=false;$('.modal-card').classList.toggle('wide',!!wide);$('.modal-card').scrollTop=0;const f=$('#modalBody').querySelector('input,select,textarea');(f||$('#modalX')).focus()}
+function closeModal(){$('#modal').hidden=true;$('#modalBody').innerHTML='';lastFocus&&lastFocus.focus&&lastFocus.focus()}
+$('#modalX').onclick=closeModal;
+$('#modal').addEventListener('click',e=>{if(e.target.id==='modal'||e.target.closest('[data-close]'))closeModal()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('#modal').hidden)closeModal()});
+
+/* ---------- shared bits ---------- */
+function hoursTable(){const wdT=new Date().getDay();return `<table class="hours">${DAYORDER.map(wd=>{const o=openingFor(wd);return `<tr class="${wd===wdT?'today':''}"><td>${cap(DAYS[wd])}</td><td>${o?hm(o[0])+' – '+hm(o[1]):'Gesloten'}</td></tr>`}).join('')}</table>`}
+function renderHours(){$$('.hours-slot').forEach(el=>el.innerHTML=hoursTable())}
+function ph(cat,label){const c=catById(cat);return `<div class="ph" style="background:linear-gradient(135deg,${c.g[0]},${c.g[1]})">${ic(c.icon)}<span class="tag">${esc(label||'Voorbeeldfoto')}</span></div>`}
+function tCard(t){return `<article class="card">${ph(t.cat)}<div class="body"><h3>${esc(t.name)}</h3><p class="desc">${esc(t.desc)}</p><div class="meta"><span class="chip">${ic('clock')}${durTxt(t.dur)}</span><span class="price">${euro(t.price)}</span></div><button class="btn primary sm" data-book="${t.id}" style="margin-top:10px">Boek deze behandeling</button></div></article>`}
+function workDays(s){return DAYORDER.filter(wd=>s.hours[wd]).map(wd=>DAYS[wd].slice(0,2)).join(', ')}
+const initials=s=>s.name.replace(/[^A-Za-z]/g,'').charAt(0)||'?';
+const avatar=(s,cls='')=>`<span class="avatar ${cls}" style="background:${s.color}">${initials(s)}</span>`;
+
+function renderStatic(){
+ renderHours();
+ $('#featured').innerHTML=S.treatments.filter(t=>t.feat).map(tCard).join('')||S.treatments.slice(0,3).map(tCard).join('');
+ $('#catnav').innerHTML=CATS.filter(c=>S.treatments.some(t=>t.cat===c.id)).map(c=>`<a href="#behandelingen" data-cat="${c.id}">${c.name}</a>`).join('');
+ $('#tlist').innerHTML=CATS.map(c=>{const ts=S.treatments.filter(t=>t.cat===c.id);if(!ts.length)return'';return `<div class="cat-block" id="cat-${c.id}"><h2>${c.name}</h2><div class="cards">${ts.map(tCard).join('')}</div></div>`}).join('');
+ $('#team').innerHTML=S.staff.map(s=>`<div class="person">${avatar(s)}<div><h3>${esc(s.name)}</h3><div class="role">${esc(s.title)}</div><p class="muted" style="margin:0 0 8px">${esc(s.bio)}</p><span class="chip">${ic('calendar')}Werkt op ${workDays(s)}</span></div></div>`).join('');
+ const pf=[['kleuren','Balayage'],['dames','Bob-lijn'],['heren','Fade'],['kleuren','Highlights'],['extra','Feestkapsel'],['kinderen','Kinderkapsel'],['dames','Lagen'],['kleuren','Koperblond']];
+ $('#portfolio').innerHTML=pf.map(([c,l])=>ph(c,l)).join('');
+ const cl=[['pin','Adres',`<span class="placeholder">${CONTACT.straat}</span><br><span class="placeholder">${CONTACT.plaats}</span>`],['phone','Telefoon (bellen of WhatsApp)',`<a href="tel:0612345678">${CONTACT.tel}</a>`],['mail','E-mail',`<a href="mailto:${CONTACT.email}">${CONTACT.email}</a>`],['car','Parkeren',`<span class="placeholder">${CONTACT.parkeren}</span>`],['insta','Instagram',`<a href="${CONTACT.insta}" target="_blank" rel="noopener">${CONTACT.instaH}</a>`],['card','Betalen','Pin of contant, in de salon']];
+ $('#clist').innerHTML=cl.map(([i,k,v])=>`<li><span class="ic">${ic(i)}</span><div><small>${k}</small>${v}</div></li>`).join('');
+ $('#routeTxt').textContent=CONTACT.route;
+ $('#fcontact').innerHTML=`${CONTACT.straat}<br>${CONTACT.plaats}<br>${CONTACT.tel}<br>${CONTACT.email}<br><a href="${CONTACT.insta}" target="_blank" rel="noopener">Instagram: ${CONTACT.instaH}</a>`;
+}
+document.addEventListener('click',e=>{
+ const b=e.target.closest('[data-book]');if(b){e.preventDefault();bk.items=[b.dataset.book];bk.date=null;bk.slot=null;bk.step=2;bk.done=null;go('afspraak');return}
+ const c=e.target.closest('[data-cat]');if(c){e.preventDefault();const el=$('#cat-'+c.dataset.cat);el&&el.scrollIntoView({behavior:'smooth'})}
+});
+
+/* ---------- booking ---------- */
+const bk={step:1,items:[],staff:'any',week:0,date:null,slot:null,form:{name:'',email:'',phone:'',note:'',ok:false},done:null};
+const bkDur=()=>bk.items.reduce((s,id)=>s+(T(id)?.dur||0),0);
+const bkPrice=()=>bk.items.reduce((s,id)=>s+(T(id)?.price||0),0);
+function availFor(date,dur){
+ const ids=bk.staff==='any'?S.staff.map(s=>s.id):[bk.staff];const map=new Map();
+ ids.forEach(id=>slotsFor(date,id,dur).forEach(t=>{if(!map.has(t))map.set(t,[]);map.get(t).push(id)}));
+ return [...map.entries()].sort((a,b)=>a[0]-b[0]).map(([start,staff])=>({start,staff}));
+}
+function works(date){const ids=bk.staff==='any'?S.staff.map(s=>s.id):[bk.staff];return ids.some(id=>staffHours(id,date))}
+function renderBooking(){
+ const steps=['Behandeling','Kapster','Datum & tijd','Gegevens'];
+ $('#stepper').innerHTML=steps.map((s,i)=>`<li class="${bk.step===i+1?'on':bk.step>i+1?'done':''}"><b>Stap ${i+1}</b><span>${s}</span></li>`).join('');
+ const m=$('#bkMain');
+ if(bk.step===1){
+  m.innerHTML=`<h2>Welke behandeling wil je?</h2><p class="muted">Je kunt meerdere behandelingen combineren, bijvoorbeeld kleuren en knippen.</p>`+CATS.map(c=>{const ts=S.treatments.filter(t=>t.cat===c.id);if(!ts.length)return'';return `<div class="grp-title">${c.name}</div><div class="opt-list">${ts.map(t=>`<button class="opt ${bk.items.includes(t.id)?'sel':''}" data-ti="${t.id}" aria-pressed="${bk.items.includes(t.id)}"><span class="chk">${ic('check')}</span><span class="grow"><b>${esc(t.name)}</b><small>${esc(t.desc)}</small></span><span class="r"><b>${euro(t.price)}</b><small>${durTxt(t.dur)}</small></span></button>`).join('')}</div>`}).join('')+`<div class="panel-foot"><span></span><button class="btn primary" data-nav="2" ${bk.items.length?'':'disabled'}>Volgende: kapster kiezen</button></div>`;
+ }else if(bk.step===2){
+  const opt=(id,title,sub,av)=>`<button class="opt radio staff-opt ${bk.staff===id?'sel':''}" data-st="${id}" aria-pressed="${bk.staff===id}">${av}<b>${title}</b><small>${sub}</small></button>`;
+  m.innerHTML=`<h2>Bij wie wil je graag?</h2><p class="muted">Geen voorkeur? Dan zie je de meeste beschikbare tijden.</p><div class="staff-opts">${opt('any','Geen voorkeur','Eerste die vrij is','<span class="avatar" style="background:var(--sand);color:var(--ink)">'+ic('users')+'</span>')}${S.staff.map(s=>opt(s.id,esc(s.name),esc(s.title)+'<br>'+workDays(s),avatar(s))).join('')}</div><div class="panel-foot"><button class="btn light" data-nav="1">← Terug</button><button class="btn primary" data-nav="3">Volgende: datum &amp; tijd</button></div>`;
+ }else if(bk.step===3){
+  const dur=bkDur(),t0=today0(),start=addDays(t0,bk.week*7);let days='';
+  for(let i=0;i<7;i++){const d=addDays(start,i),key=ds(d),off=Math.round((d-t0)/864e5);const closed=!works(key);let n=null;if(!closed&&off<=MAX_DAYS)n=availFor(key,dur).length;
+   const dis=closed||!n;days+=`<button class="day ${bk.date===key?'sel':''}" data-day="${key}" ${dis?'disabled':''}><div class="dn">${d.toLocaleDateString('nl-NL',{weekday:'short'})}</div><div class="dd">${d.getDate()}</div><div class="dc">${closed?'gesloten':n===null?'–':n===0?'vol':n+' vrij'}</div></button>`}
+  const end=addDays(start,6);const lbl=start.getMonth()===end.getMonth()?start.toLocaleDateString('nl-NL',{month:'long',year:'numeric'}):start.toLocaleDateString('nl-NL',{month:'short'})+' – '+end.toLocaleDateString('nl-NL',{month:'short',year:'numeric'});
+  let times='';
+  if(bk.date){const av=availFor(bk.date,dur);const grp=[['Ochtend',0,720],['Middag',720,1020],['Avond',1020,1440]];
+   times=`<div class="times-wrap"><h3 style="font-size:1.3rem">${fmtLong(bk.date)}</h3>`+(av.length?grp.map(([g,a,b])=>{const xs=av.filter(x=>x.start>=a&&x.start<b);return xs.length?`<div class="tlabel">${g}</div><div class="times">${xs.map(x=>`<button class="time ${bk.slot&&bk.slot.start===x.start?'sel':''}" data-slot="${x.start}">${hm(x.start)}</button>`).join('')}</div>`:''}).join(''):'<p class="muted">Geen tijden meer vrij op deze dag.</p>')+`<p class="small muted">Je behandeling duurt ${durTxt(dur)}; je ziet alleen tijden waarop die helemaal past.</p></div>`}
+  else times=`<p class="muted" style="margin-top:18px">Kies een dag om de vrije tijden te zien.</p>`;
+  m.innerHTML=`<h2>Kies een datum en tijd</h2><div class="weeknav"><button class="iconbtn" data-week="-1" ${bk.week<=0?'disabled':''} aria-label="Vorige week">${ic('left')}</button><b>${lbl}</b><button class="iconbtn" data-week="1" ${(bk.week+1)*7>MAX_DAYS?'disabled':''} aria-label="Volgende week">${ic('right')}</button></div><div class="days">${days}</div>${times}<div class="panel-foot"><button class="btn light" data-nav="2">← Terug</button><button class="btn primary" data-nav="4" ${bk.slot?'':'disabled'}>Volgende: je gegevens</button></div>`;
+ }else if(bk.step===4){
+  const f=bk.form;
+  m.innerHTML=`<h2>Je gegevens</h2><p class="muted">We gebruiken je gegevens alleen voor deze afspraak. Lees onze <a href="#privacy">privacyverklaring</a>.</p><form id="bkForm" novalidate>
+   <div class="field" data-f="name"><label for="fName">Naam *</label><input id="fName" autocomplete="name" value="${esc(f.name)}"><span class="err">Vul je naam in.</span></div>
+   <div class="row2"><div class="field" data-f="email"><label for="fEmail">E-mailadres *</label><input id="fEmail" type="email" autocomplete="email" value="${esc(f.email)}"><span class="err">Vul een geldig e-mailadres in.</span></div>
+   <div class="field" data-f="phone"><label for="fPhone">Telefoonnummer *</label><input id="fPhone" type="tel" autocomplete="tel" value="${esc(f.phone)}"><span class="err">Vul je telefoonnummer in.</span></div></div>
+   <div class="field"><label for="fNote">Opmerking (optioneel)</label><textarea id="fNote" placeholder="Bijvoorbeeld: lang en dik haar, of een kleurwens">${esc(f.note)}</textarea></div>
+   <div class="field" data-f="ok"><label class="check"><input type="checkbox" id="fOk" ${f.ok?'checked':''}><span>Ik ga akkoord met de <a href="#huisregels">huisregels</a>: kosteloos annuleren tot 24 uur van tevoren.</span></label><span class="err">Vink dit aan om door te gaan.</span></div>
+   <div class="panel-foot"><button type="button" class="btn light" data-nav="3">← Terug</button><button type="submit" class="btn primary">Afspraak aanvragen</button></div></form>`;
+  $('#bkForm').addEventListener('input',()=>{f.name=$('#fName').value;f.email=$('#fEmail').value;f.phone=$('#fPhone').value;f.note=$('#fNote').value;f.ok=$('#fOk').checked});
+  $('#bkForm').addEventListener('submit',submitBooking);
+ }else if(bk.step===5){
+  const a=S.appts.find(x=>x.id===bk.done);
+  m.innerHTML=`<div class="success"><div class="big">${ic('check')}</div><h2>Je aanvraag is verstuurd!</h2><p class="muted">We hebben een bevestiging van ontvangst gestuurd naar <b>${esc(a.email)}</b>.</p>${detailRows(a)}
+  <div class="steps-next"><b>Wat gebeurt er nu?</b><ol><li>${esc(staffById(a.staff).name)} bekijkt je aanvraag.</li><li>Je krijgt een mail zodra je afspraak bevestigd is, met een agendabestand.</li><li>Een dag van tevoren krijg je een herinnering.</li></ol></div>
+  <div class="btns"><button class="btn light" id="seeMail">Bekijk de mail (voorbeeld)</button><button class="btn sage" id="again">Nog een afspraak maken</button></div>
+  <p class="small muted" style="margin-top:18px">Demo: <a href="#beheer">log in als kapster</a> om deze aanvraag te bevestigen.</p></div>`;
+  $('#seeMail').onclick=()=>showMail(mailFor('ontvangen',a),'Mail aan de klant: aanvraag ontvangen');
+  $('#again').onclick=()=>{Object.assign(bk,{step:1,items:[],staff:'any',week:0,date:null,slot:null,done:null});bk.form.note='';bk.form.ok=false;renderBooking();scrollToBooking()};
+ }
+ renderSummary();
+}
+function renderSummary(){
+ const el=$('#bkSum');
+ if(bk.step===5){el.innerHTML=`<h3>Samenvatting</h3><p class="sum-empty">Je aanvraag is verstuurd. Tot snel!</p>`;return}
+ const items=bk.items.map(T).filter(Boolean);
+ const st=bk.slot?staffById(bk.slot.staff):bk.staff!=='any'?staffById(bk.staff):null;
+ el.innerHTML=`<h3>Jouw afspraak</h3>`+(items.length?items.map(t=>`<div class="sum-line"><span>${esc(t.name)}</span><span>${euro(t.price)}</span></div>`).join('')+`<div class="sum-line sum-total"><span style="color:var(--ink)">Totaal</span><span>${euro(bkPrice())}</span></div><div class="sum-line"><span>Duur</span><span>${durTxt(bkDur())}</span></div>`:'<p class="sum-empty">Nog geen behandeling gekozen.</p>')+
+ `<div class="sum-line"><span>Kapster</span><span>${st?esc(st.name):'Geen voorkeur'}</span></div>`+
+ (bk.date?`<div class="sum-line"><span>Datum</span><span>${fmtShort(bk.date)}</span></div>`:'')+
+ (bk.slot?`<div class="sum-line"><span>Tijd</span><span>${hm(bk.slot.start)} – ${hm(bk.slot.start+bkDur())}</span></div>`:'')+
+ `<p class="small muted" style="margin:12px 0 0">Betalen ter plekke met pin of contant.</p>`;
+}
+function scrollToBooking(){const t=$('#stepper').getBoundingClientRect().top+scrollY-90;if(scrollY>t)scrollTo({top:t,behavior:'smooth'})}
+$('#bkMain').addEventListener('click',e=>{
+ const ti=e.target.closest('[data-ti]');if(ti){const id=ti.dataset.ti;bk.items=bk.items.includes(id)?bk.items.filter(x=>x!==id):[...bk.items,id];bk.date=null;bk.slot=null;renderBooking();return}
+ const st=e.target.closest('[data-st]');if(st){bk.staff=st.dataset.st;bk.date=null;bk.slot=null;renderBooking();return}
+ const nv=e.target.closest('[data-nav]');if(nv&&!nv.disabled){bk.step=+nv.dataset.nav;renderBooking();scrollToBooking();return}
+ const wk=e.target.closest('[data-week]');if(wk&&!wk.disabled){bk.week+= +wk.dataset.week;renderBooking();return}
+ const dy=e.target.closest('[data-day]');if(dy&&!dy.disabled){bk.date=dy.dataset.day;bk.slot=null;renderBooking();return}
+ const sl=e.target.closest('[data-slot]');if(sl){const start=+sl.dataset.slot;const x=availFor(bk.date,bkDur()).find(v=>v.start===start);if(!x)return;
+  const cnt=id=>S.appts.filter(a=>a.staff===id&&a.date===bk.date&&BLOCKING.includes(a.status)).length;
+  const sid=x.staff.slice().sort((a,b)=>cnt(a)-cnt(b))[0];bk.slot={start,staff:sid};renderBooking();return}
+});
+function submitBooking(e){
+ e.preventDefault();const f=bk.form;f.name=$('#fName').value.trim();f.email=$('#fEmail').value.trim();f.phone=$('#fPhone').value.trim();f.note=$('#fNote').value.trim();f.ok=$('#fOk').checked;
+ const bad={name:!f.name,email:!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(f.email),phone:f.phone.replace(/\D/g,'').length<8,ok:!f.ok};
+ $$('#bkForm .field[data-f]').forEach(el=>el.classList.toggle('bad',!!bad[el.dataset.f]));
+ const firstBad=$('#bkForm .field.bad input');if(firstBad){firstBad.focus();return}
+ if(!slotsFor(bk.date,bk.slot.staff,bkDur()).includes(bk.slot.start)){toast('Dit tijdstip is net bezet geraakt. Kies een ander moment.');bk.slot=null;bk.step=3;renderBooking();return}
+ const a=makeAppt({staff:bk.slot.staff,date:bk.date,start:bk.slot.start,items:bk.items,name:f.name,email:f.email,phone:f.phone,note:f.note,status:'aangevraagd'});
+ S.appts.push(a);save();sendMail('ontvangen',a);sendMail('melding',a);
+ bk.done=a.id;bk.step=5;renderBooking();scrollToBooking();
+}
+
+/* ---------- beheer ---------- */
+let me=null, aTab='verzoeken', reqFilter='mine', agWeek=0, agFilter='all', mailSel=0;
+const isOwner=()=>me&&staffById(me).role==='owner';
+const canAct=a=>isOwner()||a.staff===me;
+function renderAdmin(){
+ const root=$('#adminRoot');
+ if(!me){root.innerHTML=`<div class="login panel"><h2>Inloggen medewerkers</h2><p class="muted">Hier behandelen de kapsters de afspraakverzoeken.</p><div class="demo-hint"><b>Demo-accounts</b><br>Gebruiker <code>shirley</code> (eigenaresse) of <code>kapster2</code>, wachtwoord <code>demo</code></div><form id="loginF"><div class="field"><label for="lU">Gebruikersnaam</label><input id="lU" autocomplete="username" value="shirley"></div><div class="field"><label for="lP">Wachtwoord</label><input id="lP" type="password" autocomplete="current-password" value="demo"></div><p class="err small" id="lErr" style="color:#9b3b2b;display:none">Onjuiste gebruikersnaam of wachtwoord.</p><button class="btn primary" style="width:100%">Inloggen</button></form></div>`;
+  $('#loginF').onsubmit=e=>{e.preventDefault();const u=$('#lU').value.trim().toLowerCase();if(staffById(u)&&$('#lP').value==='demo'){me=u;aTab='verzoeken';reqFilter=isOwner()?'all':'mine';renderAdmin()}else $('#lErr').style.display='block'};return}
+ const s=staffById(me);
+ const pendN=S.appts.filter(a=>a.status==='aangevraagd'&&(isOwner()||a.staff===me)).length;
+ const tabs=[['verzoeken','Verzoeken',pendN],['agenda','Agenda'],['beschikbaarheid','Beschikbaarheid'],...(isOwner()?[['behandelingen','Behandelingen & prijzen']]:[]),['mails','E-mails']];
+ root.innerHTML=`<div class="admin-top"><div><p class="eyebrow" style="color:var(--terra-d)">Beheeromgeving</p><h1>Goedendag, ${esc(s.name)}</h1></div><div class="who">${avatar(s,'sm')}<span class="small">${esc(s.title)}</span><button class="btn light sm" id="logout">${ic('logout')}Uitloggen</button></div></div>
+ <div class="tabs" role="tablist">${tabs.map(([id,l,n])=>`<button role="tab" class="${aTab===id?'on':''}" data-tab="${id}">${l}${n?` <span class="badge">${n}</span>`:''}</button>`).join('')}</div><div id="aBody"></div>`;
+ $('#logout').onclick=()=>{me=null;renderAdmin()};
+ ({verzoeken:aRequests,agenda:aAgenda,beschikbaarheid:aAvail,behandelingen:aTreat,mails:aMails})[aTab]();
+}
+$('#adminRoot').addEventListener('click',e=>{
+ const tb=e.target.closest('[data-tab]');if(tb){aTab=tb.dataset.tab;renderAdmin();return}
+ const ac=e.target.closest('[data-act]');if(ac){const id=ac.dataset.id;({confirm:actConfirm,reject:actReject,propose:actPropose,cancel:actCancel,open:apptModal,remind:id=>showMail(mailFor('herinnering',findA(id)),'Herinnering (wordt automatisch 24 uur van tevoren verstuurd)')})[ac.dataset.act](id)}
+});
+const findA=id=>S.appts.find(a=>a.id===id);
+function reqCard(a){const s=staffById(a.staff);return `<div class="req" style="border-left-color:${s.color}"><div><div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><h4>${esc(a.name)}</h4><span class="status st-${a.status}">${a.status}</span>${a.source==='handmatig'?'<span class="chip">handmatig</span>':''}</div>
+ <div class="when">${fmtLong(a.date)} · ${hm(a.start)} – ${hm(a.start+a.dur)}</div>
+ <div class="info"><span>${esc(a.labels.join(' + '))} (${durTxt(a.dur)}, ${euro(a.price)})</span><span>Bij ${esc(s.name)}</span><span>${esc(a.phone)}</span><span>${esc(a.email)}</span><span>Ontvangen ${relTime(a.created)}</span></div>${a.note?`<div class="notep">“${esc(a.note)}”</div>`:''}</div>
+ <div class="acts">${canAct(a)?(a.status==='aangevraagd'?`<button class="btn sage sm" data-act="confirm" data-id="${a.id}">${ic('check')}Bevestigen</button><button class="btn light sm" data-act="propose" data-id="${a.id}">Ander tijdstip</button><button class="btn danger sm" data-act="reject" data-id="${a.id}">Afwijzen</button>`:`<button class="btn sage sm" data-act="confirm" data-id="${a.id}">Klant akkoord: bevestigen</button><button class="btn danger sm" data-act="cancel" data-id="${a.id}">Annuleren</button>`):'<span class="small muted">Alleen-lezen</span>'}</div></div>`}
+function aRequests(){
+ const flt=a=>reqFilter==='all'?true:reqFilter==='mine'?a.staff===me:a.staff===reqFilter;
+ const vis=a=>(isOwner()||a.staff===me)&&flt(a);
+ const pend=S.appts.filter(a=>a.status==='aangevraagd'&&vis(a)).sort((a,b)=>a.date.localeCompare(b.date)||a.start-b.start);
+ const prop=S.appts.filter(a=>a.status==='voorgesteld'&&vis(a)).sort((a,b)=>a.date.localeCompare(b.date)||a.start-b.start);
+ const fl=isOwner()?`<div class="filters">${[['all','Alle'],...S.staff.map(x=>[x.id,x.name])].map(([k,l])=>`<button class="${reqFilter===k?'on':''}" data-rf="${k}">${l}</button>`).join('')}</div>`:'';
+ $('#aBody').innerHTML=`${fl}<h3>Nieuwe verzoeken</h3><div class="req-list">${pend.map(reqCard).join('')||'<div class="empty">Geen openstaande verzoeken. Lekker bij!</div>'}</div>
+ <h3 style="margin-top:32px">Wacht op reactie van de klant</h3><p class="small muted">Verzoeken waarvoor je een ander tijdstip hebt voorgesteld. Het tijdvak blijft zolang gereserveerd.</p><div class="req-list">${prop.map(reqCard).join('')||'<div class="empty">Niets in afwachting.</div>'}</div>
+ <div class="note" style="margin-top:28px"><span data-ic="info"></span><div>Bij elke actie gaat er automatisch een e-mail naar de klant. In dit prototype zie je een voorbeeld van die mail; alle mails staan ook onder <b>E-mails</b>.</div></div>`;
+ fillIcons($('#aBody'));
+ $$('[data-rf]').forEach(b=>b.onclick=()=>{reqFilter=b.dataset.rf;aRequests()});
+}
+function after(m,title){save();renderAdmin();if(m)showMail(m,title)}
+function actConfirm(id){const a=findA(id);a.status='bevestigd';after(sendMail('bevestigd',a),'Afspraak bevestigd: deze mail gaat naar de klant')}
+function actReject(id){const a=findA(id);openModal(`<h3>Verzoek afwijzen</h3><p class="muted">${esc(a.name)} · ${fmtLong(a.date)} om ${hm(a.start)}</p><div class="field"><label for="rR">Reden (optioneel, komt in de mail)</label><textarea id="rR" placeholder="Bijvoorbeeld: op deze dag zijn we helaas volgeboekt."></textarea></div><div class="btns" style="justify-content:flex-end"><button class="btn light" data-close>Terug</button><button class="btn danger" id="rOk">Afwijzen en mail sturen</button></div>`);
+ $('#rOk').onclick=()=>{a.status='afgewezen';a.reason=$('#rR').value.trim();closeModal();after(sendMail('afgewezen',a),'Afwijzing: deze mail gaat naar de klant')}}
+function actCancel(id){const a=findA(id);openModal(`<h3>Afspraak annuleren</h3><p class="muted">${esc(a.name)} · ${fmtLong(a.date)} om ${hm(a.start)}</p><div class="field"><label for="cR">Bericht aan de klant (optioneel)</label><textarea id="cR"></textarea></div><div class="btns" style="justify-content:flex-end"><button class="btn light" data-close>Terug</button><button class="btn danger" id="cOk">Annuleren</button></div>`);
+ $('#cOk').onclick=()=>{a.status='geannuleerd';a.reason=$('#cR').value.trim();closeModal();after(sendMail('geannuleerd',a),'Annulering: deze mail gaat naar de klant')}}
+function timeOptions(date,sid,dur,exclude,sel){const sl=slotsFor(date,sid,dur,{exclude,ignoreLead:true}).filter(t=>pd(date).getTime()+t*60000>Date.now());return sl.length?sl.map(t=>`<option value="${t}" ${t===sel?'selected':''}>${hm(t)}</option>`).join(''):'<option value="">Geen tijd vrij</option>'}
+function actPropose(id){const a=findA(id);const staffSel=isOwner()?S.staff:[staffById(me)];
+ openModal(`<h3>Ander tijdstip voorstellen</h3><p class="muted">${esc(a.name)} vroeg ${fmtLong(a.date)} om ${hm(a.start)} (${durTxt(a.dur)}).</p><div class="row2"><div class="field"><label for="pD">Datum</label><input type="date" id="pD" min="${ds(today0())}" value="${a.date}"></div><div class="field"><label for="pS">Kapster</label><select id="pS">${staffSel.map(s=>`<option value="${s.id}" ${s.id===a.staff?'selected':''}>${s.name}</option>`).join('')}</select></div></div><div class="field"><label for="pT">Tijd</label><select id="pT"></select></div><div class="btns" style="justify-content:flex-end"><button class="btn light" data-close>Terug</button><button class="btn sage" id="pOk">Voorstel versturen</button></div>`);
+ const upd=()=>{$('#pT').innerHTML=$('#pD').value?timeOptions($('#pD').value,$('#pS').value,a.dur,a.id):''};upd();$('#pD').onchange=upd;$('#pS').onchange=upd;
+ $('#pOk').onclick=()=>{const t=$('#pT').value;if(!t){toast('Kies een vrij tijdstip');return}const oldWhen=fmtLong(a.date)+' om '+hm(a.start);a.date=$('#pD').value;a.start=+t;a.staff=$('#pS').value;a.status='voorgesteld';closeModal();after(sendMail('voorstel',a,{oldWhen}),'Voorstel: deze mail gaat naar de klant')}}
+function apptModal(id){const a=findA(id);const s=staffById(a.staff);
+ let acts='';if(canAct(a)){if(a.status==='aangevraagd')acts=`<button class="btn sage sm" data-m="confirm">Bevestigen</button><button class="btn light sm" data-m="propose">Ander tijdstip</button><button class="btn danger sm" data-m="reject">Afwijzen</button>`;else if(a.status==='voorgesteld')acts=`<button class="btn sage sm" data-m="confirm">Klant akkoord: bevestigen</button><button class="btn danger sm" data-m="cancel">Annuleren</button>`;else if(a.status==='bevestigd')acts=`<button class="btn light sm" data-m="remind">Herinneringsmail bekijken</button><button class="btn danger sm" data-m="cancel">Annuleren</button>`}
+ openModal(`<h3>${esc(a.name)}</h3><span class="status st-${a.status}">${a.status}</span> ${a.source==='handmatig'?'<span class="chip">handmatig ingevoerd</span>':'<span class="chip">online aangevraagd</span>'}${detailRows(a)}<div class="sum-line"><span>Telefoon</span><span>${esc(a.phone)||'–'}</span></div><div class="sum-line"><span>E-mail</span><span>${esc(a.email)||'–'}</span></div>${a.note?`<div class="notep" style="background:var(--sand-l);border-radius:8px;padding:8px 12px;margin-top:10px;font-style:italic">“${esc(a.note)}”</div>`:''}<div class="btns" style="margin-top:18px">${acts}<button class="btn light sm" data-close style="margin-left:auto">Sluiten</button></div>`);
+ $$('#modalBody [data-m]').forEach(b=>b.onclick=()=>{const k=b.dataset.m;closeModal();({confirm:actConfirm,propose:actPropose,reject:actReject,cancel:actCancel,remind:i=>showMail(mailFor('herinnering',findA(i)),'Herinnering (wordt automatisch 24 uur van tevoren verstuurd)')})[k](id)})}
+function aAgenda(){
+ const t0=today0(),mon=addDays(t0,-((t0.getDay()+6)%7)+agWeek*7);
+ const days=[];for(let i=0;i<7;i++){const d=addDays(mon,i);if(openingFor(d.getDay()))days.push(d)}
+ let lo=1440,hi=0;for(let wd=0;wd<7;wd++){const o=openingFor(wd);if(o){lo=Math.min(lo,o[0]);hi=Math.max(hi,o[1])}}lo=Math.floor(lo/60)*60-30;hi=Math.ceil(hi/60)*60+30;
+ const PX=1.05,H=(hi-lo)*PX,lanes=agFilter==='all'?S.staff.map(s=>s.id):[agFilter],cols=`64px repeat(${days.length},1fr)`;
+ const end=addDays(mon,6);
+ let head=`<div></div>`+days.map(d=>`<div class="${ds(d)===ds(t0)?'today':''}">${d.toLocaleDateString('nl-NL',{weekday:'short'})}<b>${d.getDate()} ${d.toLocaleDateString('nl-NL',{month:'short'})}</b>${lanes.length>1?`<div class="ag-lanes">${lanes.map(l=>`<span>${staffById(l).name}</span>`).join('')}</div>`:''}</div>`).join('');
+ let tcol=`<div class="ag-time" style="height:${H}px">`;for(let m=Math.ceil(lo/60)*60;m<hi;m+=60)tcol+=`<span style="top:${(m-lo)*PX}px">${hm(m)}</span>`;tcol+='</div>';
+ const now=new Date(),nowM=now.getHours()*60+now.getMinutes();
+ const colsH=days.map(d=>{const key=ds(d);let h=`<div class="ag-col" style="height:${H}px;background:repeating-linear-gradient(180deg,transparent 0 ${60*PX-1}px,var(--sand-l) ${60*PX-1}px ${60*PX}px);background-position:0 ${(Math.ceil(lo/60)*60-lo)*PX}px">`;
+  lanes.forEach((sid,li)=>{const L=li/lanes.length*100,W=100/lanes.length,st=staffById(sid),hrs=st.hours[d.getDay()];
+   const blk=S.blocks.find(b=>b.staff===sid&&key>=b.from&&key<=b.to);
+   if(blk)h+=`<div class="ag-blk" style="left:${L}%;width:${W}%;top:0;height:${H}px">${esc(blk.reason||'Vrij')}</div>`;
+   else if(!hrs)h+=`<div class="ag-off" style="left:${L}%;width:${W}%;top:0;height:${H}px"></div>`;
+   else{h+=`<div class="ag-off" style="left:${L}%;width:${W}%;top:0;height:${(hrs[0]-lo)*PX}px"></div><div class="ag-off" style="left:${L}%;width:${W}%;top:${(hrs[1]-lo)*PX}px;height:${(hi-hrs[1])*PX}px"></div>`}
+   S.appts.filter(a=>a.staff===sid&&a.date===key&&BLOCKING.includes(a.status)).forEach(a=>{const cls=a.status==='aangevraagd'?'p':a.status==='voorgesteld'?'v':'';
+    h+=`<button class="ag-ev ${cls}" data-act="open" data-id="${a.id}" style="left:calc(${L}% + 2px);width:calc(${W}% - 4px);top:${(a.start-lo)*PX}px;height:${Math.max(a.dur*PX-2,18)}px;background:${st.color};color:${cls==='p'?st.color:'#fff'}" title="${esc(a.name)}">${hm(a.start)} ${esc(a.name.split(' ')[0])}<small>${esc(a.labels.join(' + '))}</small></button>`})});
+  if(key===ds(t0)&&nowM>lo&&nowM<hi)h+=`<div class="ag-now" style="top:${(nowM-lo)*PX}px"></div>`;
+  return h+'</div>'}).join('');
+ $('#aBody').innerHTML=`<div class="ag-bar"><div class="wk"><button class="iconbtn" id="agP" aria-label="Vorige week">${ic('left')}</button><b>${mon.getDate()} ${mon.toLocaleDateString('nl-NL',{month:'short'})} – ${end.getDate()} ${end.toLocaleDateString('nl-NL',{month:'short',year:'numeric'})}</b><button class="iconbtn" id="agN" aria-label="Volgende week">${ic('right')}</button>${agWeek?'<button class="btn light sm" id="agT">Vandaag</button>':''}</div>
+ <div class="filters" style="margin:0">${[['all','Beide'],...S.staff.map(s=>[s.id,s.name])].map(([k,l])=>`<button class="${agFilter===k?'on':''}" data-af="${k}">${l}</button>`).join('')}<button class="btn primary sm" id="agAdd" style="margin-left:6px">${ic('plus')}Afspraak invoeren</button></div></div>
+ <div class="ag-scroll"><div class="ag"><div class="ag-head" style="grid-template-columns:${cols}">${head}</div><div class="ag-body" style="grid-template-columns:${cols}">${tcol}${colsH}</div></div></div>
+ <div class="legend">${S.staff.map(s=>`<span><i style="background:${s.color}"></i>${s.name}: bevestigd</span>`).join('')}<span><i style="border:1.5px dashed var(--muted)"></i>Aanvraag (nog bevestigen)</span><span><i style="background:repeating-linear-gradient(135deg,#ccc 0 3px,#999 3px 6px)"></i>Voorstel gedaan</span><span><i style="background:repeating-linear-gradient(135deg,#f4efe8 0 3px,#e3d9cc 3px 6px)"></i>Niet werkzaam / vrij</span></div>`;
+ $('#agP').onclick=()=>{agWeek--;aAgenda()};$('#agN').onclick=()=>{agWeek++;aAgenda()};if($('#agT'))$('#agT').onclick=()=>{agWeek=0;aAgenda()};
+ $$('[data-af]').forEach(b=>b.onclick=()=>{agFilter=b.dataset.af;aAgenda()});$('#agAdd').onclick=manualAppt;
+}
+function manualAppt(){const staffSel=isOwner()?S.staff:[staffById(me)];
+ openModal(`<h3>Afspraak invoeren</h3><p class="small muted">Voor klanten die bellen of appen. De afspraak staat direct als bevestigd in de agenda.</p>
+ <div class="row2"><div class="field"><label for="mN">Naam klant *</label><input id="mN"></div><div class="field"><label for="mP">Telefoon</label><input id="mP" type="tel"></div></div>
+ <div class="field"><label for="mE">E-mail (optioneel: dan krijgt de klant een bevestiging)</label><input id="mE" type="email"></div>
+ <div class="field"><label>Behandeling(en) *</label><div class="tbox" id="mT">${S.treatments.map(t=>`<label><input type="checkbox" value="${t.id}">${esc(t.name)} <span class="muted small">· ${durTxt(t.dur)} · ${euro(t.price)}</span></label>`).join('')}</div></div>
+ <div class="row2"><div class="field"><label for="mS">Kapster</label><select id="mS">${staffSel.map(s=>`<option value="${s.id}" ${s.id===me?'selected':''}>${s.name}</option>`).join('')}</select></div><div class="field"><label for="mD">Datum</label><input id="mD" type="date" min="${ds(today0())}" value="${ds(addDays(today0(),1))}"></div></div>
+ <div class="field"><label for="mTi">Tijd</label><select id="mTi"></select><span class="small muted" id="mDur"></span></div>
+ <div class="btns" style="justify-content:flex-end"><button class="btn light" data-close>Annuleren</button><button class="btn sage" id="mOk">Opslaan</button></div>`,true);
+ const items=()=>$$('#mT input:checked').map(i=>i.value);
+ const upd=()=>{const it=items(),dur=it.reduce((s,id)=>s+T(id).dur,0);$('#mDur').textContent=dur?'Duur: '+durTxt(dur):'Kies eerst een behandeling';$('#mTi').innerHTML=dur&&$('#mD').value?timeOptions($('#mD').value,$('#mS').value,dur):'<option value="">–</option>'};
+ upd();['#mT','#mS','#mD'].forEach(s=>$(s).addEventListener('change',upd));
+ $('#mOk').onclick=()=>{const it=items(),t=$('#mTi').value,n=$('#mN').value.trim();if(!n||!it.length||!t){toast('Vul naam, behandeling en een vrije tijd in');return}
+  const a=makeAppt({staff:$('#mS').value,date:$('#mD').value,start:+t,items:it,name:n,phone:$('#mP').value.trim(),email:$('#mE').value.trim(),status:'bevestigd',source:'handmatig'});S.appts.push(a);
+  const m=sendMail('bevestigd',a);closeModal();save();renderAdmin();if(m)showMail(m,'Bevestiging: deze mail gaat naar de klant');else toast('Afspraak opgeslagen')}}
+function aAvail(){
+ const list=isOwner()?S.staff:[staffById(me)];
+ $('#aBody').innerHTML=`<div class="av-grid">${list.map(s=>`<div class="panel"><div style="display:flex;gap:12px;align-items:center;margin-bottom:12px">${avatar(s,'sm')}<h3 style="margin:0">Werktijden ${esc(s.name)}</h3></div>
+  <table class="htable">${DAYORDER.map(wd=>{const h=s.hours[wd];return `<tr><td>${cap(DAYS[wd])}</td><td><input type="checkbox" aria-label="Werkt op ${DAYS[wd]}" data-hw="${s.id}|${wd}" ${h?'checked':''}></td><td><input type="time" step="900" data-hf="${s.id}|${wd}" value="${h?hm(h[0]):'09:00'}" ${h?'':'disabled'}> – <input type="time" step="900" data-ht="${s.id}|${wd}" value="${h?hm(h[1]):'17:30'}" ${h?'':'disabled'}></td></tr>`}).join('')}</table></div>`).join('')}
+  <div class="panel"><h3>Vrije dagen &amp; vakantie</h3><p class="small muted">Geblokkeerde dagen zijn voor klanten niet te boeken.</p>
+  <div class="row2"><div class="field"><label for="bF">Van</label><input type="date" id="bF" min="${ds(today0())}"></div><div class="field"><label for="bT">Tot en met</label><input type="date" id="bT" min="${ds(today0())}"></div></div>
+  <div class="row2"><div class="field"><label for="bS">Kapster</label><select id="bS">${list.map(s=>`<option value="${s.id}">${s.name}</option>`).join('')}</select></div><div class="field"><label for="bR">Omschrijving</label><input id="bR" placeholder="Vakantie, cursus…"></div></div>
+  <button class="btn sage sm" id="bAdd">${ic('plus')}Blokkeren</button>
+  <div class="blist">${S.blocks.filter(b=>list.some(s=>s.id===b.staff)).sort((a,b)=>a.from.localeCompare(b.from)).map(b=>{const n=S.appts.filter(a=>a.staff===b.staff&&a.date>=b.from&&a.date<=b.to&&BLOCKING.includes(a.status)).length;
+   return `<div class="bitem"><div><b>${esc(staffById(b.staff).name)}</b> · ${fmtShort(b.from)}${b.to!==b.from?' t/m '+fmtShort(b.to):''}<br><span class="small muted">${esc(b.reason||'Vrij')}${n?` · <span style="color:#9b3b2b">let op: ${n} afspraak/afspraken in deze periode</span>`:''}</span></div><button class="iconbtn" data-bdel="${b.id}" aria-label="Verwijderen">${ic('trash')}</button></div>`}).join('')||'<p class="small muted">Nog geen vrije dagen ingepland.</p>'}</div></div></div>
+  <div class="note" style="margin-top:22px"><span data-ic="info"></span><div>De openingstijden op de website worden automatisch berekend uit de werktijden van de kapsters. Wijzigingen worden direct zichtbaar.</div></div>`;
+ fillIcons($('#aBody'));
+ const body=$('#aBody');
+ body.onchange=e=>{const el=e.target;const k=el.dataset.hw||el.dataset.hf||el.dataset.ht;if(!k)return;const[sid,wd]=k.split('|');const s=staffById(sid);
+  if(el.dataset.hw){if(el.checked){s.hours[wd]=[toMin($(`[data-hf="${k}"]`).value),toMin($(`[data-ht="${k}"]`).value)]}else delete s.hours[wd];$(`[data-hf="${k}"]`).disabled=$(`[data-ht="${k}"]`).disabled=!el.checked}
+  else if(s.hours[wd]){const f=toMin($(`[data-hf="${k}"]`).value),t=toMin($(`[data-ht="${k}"]`).value);if(t>f)s.hours[wd]=[f,t];else{toast('Eindtijd moet na de begintijd liggen');return}}
+  save();renderHours();renderStatic();toast('Werktijden opgeslagen')};
+ $('#bAdd').onclick=()=>{const f=$('#bF').value,t=$('#bT').value||f;if(!f||t<f){toast('Kies een geldige periode');return}S.blocks.push({id:'B'+Date.now(),staff:$('#bS').value,from:f,to:t,reason:$('#bR').value.trim()});save();aAvail();toast('Periode geblokkeerd')};
+ $$('[data-bdel]').forEach(b=>b.onclick=()=>{S.blocks=S.blocks.filter(x=>x.id!==b.dataset.bdel);save();aAvail()});
+}
+function aTreat(){
+ const durs=[];for(let m=15;m<=240;m+=15)durs.push(m);
+ $('#aBody').innerHTML=`<p class="muted">Wijzigingen worden direct overgenomen op de prijslijst en in de afspraakplanner. Bestaande afspraken houden hun oorspronkelijke prijs en duur.</p><div style="overflow-x:auto"><table class="ttable"><thead><tr><th>Behandeling</th><th>Categorie</th><th>Duur</th><th>Prijs (€)</th><th>Uitgelicht</th><th></th></tr></thead><tbody>${S.treatments.map(t=>`<tr>
+ <td><input data-tf="${t.id}|name" value="${esc(t.name)}" aria-label="Naam"><input data-tf="${t.id}|desc" value="${esc(t.desc)}" aria-label="Omschrijving" style="margin-top:4px;font-size:.85rem"></td>
+ <td><select data-tf="${t.id}|cat" aria-label="Categorie">${CATS.map(c=>`<option value="${c.id}" ${c.id===t.cat?'selected':''}>${c.name}</option>`).join('')}</select></td>
+ <td><select data-tf="${t.id}|dur" aria-label="Duur">${durs.map(m=>`<option value="${m}" ${m===t.dur?'selected':''}>${durTxt(m)}</option>`).join('')}</select></td>
+ <td><input data-tf="${t.id}|price" type="number" min="0" step="0.5" value="${t.price}" style="width:90px" aria-label="Prijs"></td>
+ <td><input type="checkbox" data-tf="${t.id}|feat" ${t.feat?'checked':''} aria-label="Uitgelicht op home" style="width:18px;height:18px;accent-color:var(--sage-d)"></td>
+ <td><button class="iconbtn" data-tdel="${t.id}" aria-label="Verwijderen">${ic('trash')}</button></td></tr>`).join('')}</tbody></table></div>
+ <div class="btns" style="margin-top:14px"><button class="btn sage sm" id="tAdd">${ic('plus')}Behandeling toevoegen</button></div>`;
+ $('#aBody').onchange=e=>{const k=e.target.dataset.tf;if(!k)return;const[id,f]=k.split('|');const t=T(id);if(!t)return;
+  t[f]=f==='price'?Math.max(0,parseFloat(e.target.value)||0):f==='dur'?+e.target.value:f==='feat'?(e.target.checked?1:0):e.target.value;save();renderStatic();toast('Opgeslagen')};
+ $$('[data-tdel]').forEach(b=>b.onclick=()=>{S.treatments=S.treatments.filter(t=>t.id!==b.dataset.tdel);bk.items=bk.items.filter(i=>T(i));save();renderStatic();aTreat()});
+ $('#tAdd').onclick=()=>{S.treatments.push({id:'t'+Date.now(),cat:'dames',name:'Nieuwe behandeling',desc:'Omschrijving',price:30,dur:30});save();renderStatic();aTreat()};
+}
+function aMails(){
+ const sample=S.appts.find(a=>a.status==='bevestigd'&&a.date>=ds(today0())&&a.email)||S.appts.find(a=>a.email);
+ const mails=S.outbox;if(mailSel>=mails.length)mailSel=0;
+ $('#aBody').innerHTML=`<h3>Sjablonen bekijken</h3><p class="small muted">Zo zien de automatische mails eruit (met een voorbeeldafspraak). Contactgegevens en de route naar de salon staan in elke klantmail.</p>
+ <div class="tpl-btns">${Object.entries(MAILTYPE).map(([k,l])=>`<button class="btn light sm" data-tpl="${k}">${l}</button>`).join('')}</div>
+ <h3>Verstuurde mails <span class="badge grey">${mails.length}</span></h3><p class="small muted">In het prototype worden mails niet echt verstuurd, maar hier bewaard.</p>
+ ${mails.length?`<div class="mail-layout"><div class="mlist">${mails.map((m,i)=>`<button class="mitem ${i===mailSel?'on':''}" data-mi="${i}"><b>${esc(m.subj)}</b><small>${MAILTYPE[m.type]} · aan ${esc(m.to)} · ${relTime(m.at)}</small></button>`).join('')}</div><div>${mailHTML(mails[mailSel])}</div></div>`:'<div class="empty">Nog geen mails verstuurd. Bevestig een verzoek of doe zelf een aanvraag via de website.</div>'}
+ <div class="panel" style="margin-top:28px"><h3>Demo-gegevens</h3><p class="small muted">Alle afspraken en wijzigingen worden alleen in deze browser bewaard. Hiermee zet je alles terug naar de voorbeeldsituatie.</p><button class="btn danger sm" id="reset">Demo-gegevens herstellen</button></div>`;
+ $$('[data-tpl]').forEach(b=>b.onclick=()=>sample&&showMail(mailFor(b.dataset.tpl,sample),'Sjabloon: '+MAILTYPE[b.dataset.tpl]));
+ $$('[data-mi]').forEach(b=>b.onclick=()=>{mailSel=+b.dataset.mi;aMails()});
+ $('#reset').onclick=()=>{openModal(`<h3>Demo-gegevens herstellen?</h3><p class="muted">Alle aanvragen, wijzigingen en mails in deze browser worden gewist.</p><div class="btns" style="justify-content:flex-end"><button class="btn light" data-close>Terug</button><button class="btn danger" id="rsOk">Herstellen</button></div>`);
+  $('#rsOk').onclick=()=>{try{localStorage.removeItem(LS)}catch(e){}S=seed();save();closeModal();Object.assign(bk,{step:1,items:[],staff:'any',week:0,date:null,slot:null,done:null});renderStatic();renderAdmin();toast('Demo-gegevens hersteld')}};
+}
+
+/* ---------- router ---------- */
+const PAGES=['home','behandelingen','afspraak','over-ons','contact','huisregels','privacy','beheer'];
+function go(p){if(location.hash==='#'+p)route();else location.hash=p}
+function route(){
+ let p=location.hash.slice(1)||'home';if(!PAGES.includes(p))p='home';
+ $$('.page').forEach(s=>s.hidden=s.dataset.page!==p);
+ $$('#nav a').forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+p&&!a.classList.contains('cta')));
+ $('#nav').classList.remove('open');$('#menuBtn').setAttribute('aria-expanded','false');
+ if(p==='afspraak')renderBooking();
+ if(p==='beheer')renderAdmin();
+ document.title=(p==='home'?'itsyourbeauty by Shirley':({behandelingen:'Behandelingen & prijzen',afspraak:'Afspraak maken','over-ons':'Over ons',contact:'Contact',huisregels:'Huisregels',privacy:'Privacy',beheer:'Beheer'}[p]+' · itsyourbeauty'))+' – prototype';
+ scrollTo(0,0);
+}
+$('#menuBtn').onclick=()=>{const o=$('#nav').classList.toggle('open');$('#menuBtn').setAttribute('aria-expanded',o)};
+window.addEventListener('hashchange',route);
+
+load();fillIcons();renderStatic();route();
+</script>
+</body>
+</html>
